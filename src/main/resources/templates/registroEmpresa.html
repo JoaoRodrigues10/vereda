@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Cadastro de Empresa - Vereda</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+          background-color: #f9f9f9;
+          font-family: 'Segoe UI', sans-serif;
+        }
+        .form-container {
+          max-width: 500px;
+          margin: 5rem auto;
+          padding: 2rem;
+          background: white;
+          border-radius: 10px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .error-message {
+          color: red;
+          font-size: 0.875em;
+          margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h3 class="mb-4 text-center">Cadastro de Empresa</h3>
+    <form id="registroEmpresaForm">
+        <!-- Nome -->
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome da Empresa</label>
+            <input type="text" class="form-control" id="nome" required>
+            <div class="error-message" id="nomeError">Nome é obrigatório.</div>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" required>
+            <div class="error-message" id="emailError">Email inválido.</div>
+        </div>
+
+        <!-- Senha -->
+        <div class="mb-3">
+            <label for="senha" class="form-label">Senha</label>
+            <input type="password" class="form-control" id="senha" required>
+            <div class="error-message" id="senhaError">Senha deve ter pelo menos 6 caracteres.</div>
+        </div>
+
+        <!-- Confirmação de Senha -->
+        <div class="mb-3">
+            <label for="confirmarSenha" class="form-label">Confirmar Senha</label>
+            <input type="password" class="form-control" id="confirmarSenha" required>
+            <div class="error-message" id="confirmarSenhaError">As senhas não coincidem.</div>
+        </div>
+
+        <!-- Botão -->
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Cadastrar Empresa</button>
+        </div>
+
+        <!-- Mensagem de Sucesso/Erro -->
+        <div id="feedbackMessage" class="mt-3 text-center" style="display: none;"></div>
+    </form>
+</div>
+
+<script>
+    // Função para validar campos
+    function validarFormulario() {
+      const nome = document.getElementById('nome').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const senha = document.getElementById('senha').value;
+      const confirmarSenha = document.getElementById('confirmarSenha').value;
+
+      let isValid = true;
+
+      // Limpa mensagens anteriores
+      document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+
+      // Validação Nome
+      if (!nome) {
+        document.getElementById('nomeError').style.display = 'block';
+        isValid = false;
+      }
+
+      // Validação Email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        document.getElementById('emailError').style.display = 'block';
+        isValid = false;
+      }
+
+      // Validação Senha
+      if (senha.length < 6) {
+        document.getElementById('senhaError').style.display = 'block';
+        isValid = false;
+      }
+
+      // Validação Confirmação de Senha
+      if (senha !== confirmarSenha) {
+        document.getElementById('confirmarSenhaError').style.display = 'block';
+        isValid = false;
+      }
+
+      return isValid;
+    }
+
+    // Função para enviar dados via fetch
+    async function enviarDados(usuario) {
+      try {
+        const response = await fetch('http://localhost:8080/api/registro/empresa', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(usuario)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          document.getElementById('feedbackMessage').innerText = 'Cadastro realizado com sucesso!';
+          document.getElementById('feedbackMessage').style.color = 'green';
+          document.getElementById('feedbackMessage').style.display = 'block';
+
+          // Redireciona após 2 segundos (opcional)
+          setTimeout(() => {
+            window.location.href = '/login.html'; // Substitua pela página de login
+          }, 2000);
+
+        } else {
+          document.getElementById('feedbackMessage').innerText = data.message || 'Erro ao cadastrar empresa.';
+          document.getElementById('feedbackMessage').style.color = 'red';
+          document.getElementById('feedbackMessage').style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        document.getElementById('feedbackMessage').innerText = 'Erro ao conectar com o servidor.';
+        document.getElementById('feedbackMessage').style.color = 'red';
+        document.getElementById('feedbackMessage').style.display = 'block';
+      }
+    }
+
+    // Evento de submit do formulário
+    document.getElementById('registroEmpresaForm').addEventListener('submit', function (e) {
+      e.preventDefault(); // Impede o envio padrão
+
+      if (validarFormulario()) {
+        const usuario = {
+          nome: document.getElementById('nome').value,
+          email: document.getElementById('email').value,
+          senha: document.getElementById('senha').value
+          // O campo "papel" é definido no backend como "EMPRESA"
+        };
+
+        enviarDados(usuario);
+      }
+    });
+</script>
+
+</body>
+</html>
