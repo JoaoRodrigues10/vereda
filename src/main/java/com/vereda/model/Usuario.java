@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*; // Importe correto para Spring Boot 3.x
 
 @Entity
+@Table(name = "tb_usario")
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
