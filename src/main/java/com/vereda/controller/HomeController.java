@@ -12,7 +12,15 @@ public class HomeController {
     }
 
     @GetMapping("/registroEmpresa")
-    public String mostrarFormulario() {
+    public String mostrarFormularioEmpresa() {
         return "registroEmpresa";
+
     }
+
+    @GetMapping("/registroOng")
+    public String mostrarFormularioOng() {
+        return "registroOng";
+    }
+
 }
+
