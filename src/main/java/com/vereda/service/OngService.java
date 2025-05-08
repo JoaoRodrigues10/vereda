@@ -22,7 +22,7 @@ public class OngService {
         this.empresaRepository = empresaRepository;
     }
 
-    public UUID cadastrarOng(CadastroOngDto cadastroOngDto) {
+    public Long cadastrarOng(CadastroOngDto cadastroOngDto) {
         System.out.println(cadastroOngDto);
 
         if (cadastroOngDto.cnpj()== null || cadastroOngDto.cnpj().isBlank()){

@@ -30,7 +30,7 @@ public class EmpresaController {
         }
 
         try {
-            UUID empresaId = empresaService.cadastrarEmpresa(cadastroEmpresaDto);
+            Long empresaId = empresaService.cadastrarEmpresa(cadastroEmpresaDto);
             System.out.println("Empresa cadastrada com ID: " + empresaId); // Log de debug
             return ResponseEntity.created(URI.create("/api/empresas/" + empresaId)).build();
         } catch (Exception e) {

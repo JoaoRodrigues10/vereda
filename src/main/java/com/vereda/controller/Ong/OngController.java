@@ -32,7 +32,7 @@ public class OngController {
         }
 
         try{
-            UUID ongId = ongService.cadastrarOng(cadastroOngDto);
+            Long ongId = ongService.cadastrarOng(cadastroOngDto);
             System.out.println("Ong cadastrada com ID:" + ongId);
             return ResponseEntity.ok().build();
 

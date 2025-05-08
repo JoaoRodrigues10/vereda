@@ -11,8 +11,8 @@ import java.util.UUID;
 @Table(name = "tb_empresa")
 public class Empresa {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID idEmpresa;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idEmpresa;
 
     @Column(name = "nome",nullable = false)
     private String nome;
@@ -45,7 +45,7 @@ public class Empresa {
 
     }
 
-    public Empresa(UUID idEmpresa, String nome, String email, String senha, String telefone, String endereco, String setor, String cnpj, Instant creationTimestamp, Instant updateTimestamp) {
+    public Empresa(Long idEmpresa, String nome, String email, String senha, String telefone, String endereco, String setor, String cnpj, Instant creationTimestamp, Instant updateTimestamp) {
         this.idEmpresa = idEmpresa;
         this.nome = nome;
         this.email = email;
@@ -59,11 +59,11 @@ public class Empresa {
     }
 
 
-    public UUID getIdEmpresa() {
+    public Long getIdEmpresa() {
         return idEmpresa;
     }
 
-    public void setIdEmpresa(UUID idEmpresa) {
+    public void setIdEmpresa(Long idEmpresa) {
         this.idEmpresa = idEmpresa;
     }
 

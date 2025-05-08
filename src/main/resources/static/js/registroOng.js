@@ -102,7 +102,7 @@ async function enviarDados(ong) {
             showFeedback('✅ Cadastro realizado com sucesso! Redirecionando para login...', 'success');
 
             setTimeout(() => {
-                window.location.href = '/login'; // Confirme este caminho
+                window.location.href = '/homeOng'; // Confirme este caminho
             }, 2000);
         } else {
             const error = await response.json();

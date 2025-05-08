@@ -1,0 +1,87 @@
+:root {
+    --primary: #3B82F6; /* Azul para empresas */
+    --secondary: #10B981; /* Verde para ONGs (usado em hover) */
+    --gray: #6B7280;
+    --white: #FFFFFF;
+    --error: #EF4444;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #F9FAFB;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.login-container {
+    background: var(--white);
+    border-radius: 1rem;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+label {
+    font-weight: 600;
+    color: var(--gray);
+}
+
+input {
+    padding: 0.75rem 1rem;
+    border: 1px solid #D1D5DB;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.btn-submit {
+    background: var(--primary);
+    color: var(--white);
+    padding: 0.85rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s ease;
+}
+
+.btn-submit:hover {
+    background: var(--secondary);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.error-message {
+    color: var(--error);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.login-link {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--gray);
+}
+
+.login-link a {
+    color: var(--primary);
+    text-decoration: underline;
+    font-weight: 500;
+}

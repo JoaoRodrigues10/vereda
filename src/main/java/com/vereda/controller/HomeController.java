@@ -22,5 +22,25 @@ public class HomeController {
         return "registroOng";
     }
 
+    @GetMapping("/login-empresa")
+    public String mostrarLoginEmpresa() {
+        return "login-empresa";
+    }
+
+    @GetMapping("/login-ong")
+    public String mostrarLoginOng() {
+        return "login-ong";
+    }
+
+    @GetMapping("/homeEmpresa")
+    public String mostrarHomeEmpresa() {
+        return "homeEmpresa";
+    }
+
+    @GetMapping("/homeOng")
+    public String mostrarHomeOng() {
+        return "homeOng";
+    }
+
 }
 

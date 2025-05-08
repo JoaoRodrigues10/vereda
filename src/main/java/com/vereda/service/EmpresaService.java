@@ -20,7 +20,7 @@ public class EmpresaService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UUID cadastrarEmpresa(CadastroEmpresaDto cadastroEmpresaDto) {
+    public Long cadastrarEmpresa(CadastroEmpresaDto cadastroEmpresaDto) {
         System.out.println("Iniciando cadastro de empresa..."); // Log de debug
 
         if (cadastroEmpresaDto.cnpj() == null || cadastroEmpresaDto.cnpj().isBlank()) {
