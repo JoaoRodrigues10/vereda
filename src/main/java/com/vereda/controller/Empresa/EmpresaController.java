@@ -24,35 +24,31 @@ public class EmpresaController {
     }
 
     @PostMapping("/empresa")
-    public ResponseEntity<Void> cadastroEmpresa(@RequestBody CadastroEmpresaDto cadastroEmpresaDto) {
-        System.out.println("Dados recebidos: " + cadastroEmpresaDto); // Log de debug
+    public ResponseEntity<Void> cadastroEmpresa(
+            @RequestBody CadastroEmpresaDto cadastroEmpresaDto,
+            HttpSession session) {
+
+        System.out.println("Dados recebidos: " + cadastroEmpresaDto);
 
         if (cadastroEmpresaDto.cnpj() == null || cadastroEmpresaDto.cnpj().isBlank()) {
-            System.out.println("CNPJ não informado"); // Log de debug
+            System.out.println("CNPJ não informado");
             return ResponseEntity.badRequest().build();
         }
 
         try {
             Long empresaId = empresaService.cadastrarEmpresa(cadastroEmpresaDto);
-            System.out.println("Empresa cadastrada com ID: " + empresaId); // Log de debug
+            System.out.println("Empresa cadastrada com ID: " + empresaId);
+
+            session.setAttribute("empresaId", empresaId); // ✅ ESSA LINHA É A CHAVE
+
             return ResponseEntity.created(URI.create("/api/empresas/" + empresaId)).build();
         } catch (Exception e) {
-            System.out.println("Erro ao cadastrar empresa: " + e.getMessage()); // Log de erro
+            System.out.println("Erro ao cadastrar empresa: " + e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
     }
 
-    @GetMapping("/perfil")
-    public Empresa getPerfil(HttpSession session) {
-        Object empresaId = session.getAttribute("empresaId");
-        System.out.println("SESSION empresaId: " + empresaId); // 🧪 Debug
 
-        if (empresaId == null) {
-            throw new RuntimeException("Empresa não autenticada");
-        }
 
-        return empresaRepository.findById((Long) empresaId)
-                .orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
-    }
 
 }
