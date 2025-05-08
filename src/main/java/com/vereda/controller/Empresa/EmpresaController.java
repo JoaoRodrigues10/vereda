@@ -1,12 +1,12 @@
 package com.vereda.controller.Empresa;
 
 import com.vereda.model.Empresa;
+import com.vereda.repository.EmpresaRepository;
 import com.vereda.service.EmpresaService;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.UUID;
@@ -15,6 +15,9 @@ import java.util.UUID;
 @RequestMapping("/api/registro")
 public class EmpresaController {
     private final EmpresaService empresaService;
+
+    @Autowired
+    private EmpresaRepository empresaRepository;
 
     public EmpresaController(EmpresaService empresaService) {
         this.empresaService = empresaService;
@@ -38,4 +41,18 @@ public class EmpresaController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    @GetMapping("/perfil")
+    public Empresa getPerfil(HttpSession session) {
+        Object empresaId = session.getAttribute("empresaId");
+        System.out.println("SESSION empresaId: " + empresaId); // 🧪 Debug
+
+        if (empresaId == null) {
+            throw new RuntimeException("Empresa não autenticada");
+        }
+
+        return empresaRepository.findById((Long) empresaId)
+                .orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
+    }
+
 }

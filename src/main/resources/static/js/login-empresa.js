@@ -6,7 +6,8 @@ document.getElementById('loginEmpresaForm').addEventListener('submit', function 
     fetch('/api/login/empresa', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, senha })
+        body: JSON.stringify({ email, senha }),
+        credentials: 'same-origin' // ⬅️ ISSO MANTÉM A SESSÃO
     })
         .then(res => res.json())
         .then(data => {

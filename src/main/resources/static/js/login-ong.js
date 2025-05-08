@@ -11,7 +11,7 @@ document.getElementById('loginOngForm').addEventListener('submit', function (e) 
         .then(res => res.json())
         .then(data => {
             if (data.message === "Login bem-sucedido") {
-                window.location.href = '/ong/dashboard.html'; // Redirecione conforme necessário
+                window.location.href = '../empresa/dashboard.html'; // Redirecione conforme necessário
             } else {
                 document.getElementById('errorMessage').textContent = data.message;
             }
