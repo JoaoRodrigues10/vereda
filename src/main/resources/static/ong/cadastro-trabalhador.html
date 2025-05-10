@@ -1,0 +1,127 @@
+<div class="perfil-container">
+    <h2>Cadastre o colaborador</h2>
+    <form id="perfilForm">
+        <div class="form-group">
+            <label for="nome">Nome do Volutario</label>
+            <input type="text" id="nome" name="nome" required />
+        </div>
+
+        <div class="form-group">
+            <label for="email">E-mail de Contato</label>
+            <input type="email" id="email" name="email" required />
+        </div>
+
+        <div class="form-group">
+            <label for="cpf">CPF</label>
+            <input type="text" id="cpf" name="cpf" required />
+        </div>
+
+        <div class="form-group">
+            <label for="telefone">Data de Nascimento</label>
+            <input type="date" id="data-de-nascimento" name="data-de-nascimento" required />
+        </div>
+
+        <div class="form-group">
+            <label for="telefone">Telefone</label>
+            <input type="tel" id="telefone" name="telefone" required />
+        </div>
+
+
+        <div class="form-group">
+            <label for="endereco">Endereço</label>
+            <input type="text" id="endereco" name="endereco" required />
+        </div>
+
+        <button type="submit" class="btn-salvar">Salvar Alterações</button>
+    </form>
+</div>
+
+<style>
+    .perfil-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: #f9f9f9;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .perfil-container h2 {
+        margin-bottom: 1.5rem;
+        text-align: center;
+        color: #005a8d;
+    }
+
+    .form-group {
+        margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+        color: #333;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.6rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+
+    .btn-salvar {
+        width: 100%;
+        padding: 0.8rem;
+        background-color: #005a8d;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .btn-salvar:hover {
+        background-color: #00446a;
+    }
+
+    /* Adicione ao seu CSS existente */
+    input[type="date"] {
+        /* Garante consistência com outros inputs */
+        height: 2.5rem;
+        padding: 0.5rem;
+    }
+
+    /* Melhora o feedback de validação */
+    input:invalid {
+        border-color: #ff6b6b;
+    }
+
+    /* Estilo para mensagens de erro (se for adicionar) */
+    .error-message {
+        color: #ff6b6b;
+        font-size: 0.8rem;
+        margin-top: 0.2rem;
+    }
+
+</style>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        fetch('/api/registro/perfil')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('nome').value = data.nome;
+                document.getElementById('email').value = data.email;
+                document.getElementById('telefone').value = data.telefone;
+                document.getElementById('cnpj').value = data.cnpj;
+                document.getElementById('endereco').value = data.endereco;
+            })
+            .catch(() => {
+                alert("Erro ao carregar perfil da Ong.");
+            });
+    });
+</script>

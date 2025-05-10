@@ -1,5 +1,7 @@
 package com.vereda.controller;
 
+import com.vereda.model.Ong;
+import com.vereda.repository.OngRepository;
 import org.springframework.ui.Model;
 import com.vereda.model.Empresa;
 import jakarta.servlet.http.HttpSession;
@@ -16,6 +18,8 @@ public class HomeController {
 
     @Autowired
     private EmpresaRepository empresaRepository;
+    @Autowired
+    private OngRepository ongRepository;
 
 
     @GetMapping("/")
@@ -58,7 +62,15 @@ public class HomeController {
     }
 
     @GetMapping("/homeOng")
-    public String mostrarHomeOng() {
+    public String mostrarHomeOng(Model model, HttpSession session) {
+        Long ongId = (Long) session.getAttribute("ongId");
+
+        Optional<Ong> ongOpt = ongRepository.findById(ongId);
+        if (ongOpt.isEmpty()) {
+            return "error";
+        }
+
+        model.addAttribute("ong", ongOpt.get());
         return "homeOng";
     }
 
