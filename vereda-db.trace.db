@@ -229,3 +229,6 @@ Caused by: org.h2.mvstore.MVStoreException: The file is locked: C:/Users/Fideles
 	at org.h2.mvstore.SingleFileStore.open(SingleFileStore.java:81)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:286)
 	... 57 more
+2025-05-19 18:05:54.979121-03:00 jdbc[68]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "TRUNCATE TABLE TB_EMPRESA RESTART IDENTITY [*]CASCADE"; SQL statement:
+TRUNCATE TABLE TB_EMPRESA RESTART IDENTITY CASCADE [42000-232]

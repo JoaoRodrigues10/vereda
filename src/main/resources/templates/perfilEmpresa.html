@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Vereda - Editar Perfil</title>
+    <link rel="stylesheet" href="/css/perfilEmpresa.css"> <!-- Estilo específico -->
+</head>
+<body>
+
+<!-- Cabeçalho -->
+<header class="perfil-header">
+    <div class="container">
+        <h1>Editar Perfil da Empresa</h1>
+        <p>Atualize suas informações para garantir conformidade jurídica e transparência.</p>
+    </div>
+</header>
+
+<!-- Formulário de Edição -->
+<section class="editar-section">
+    <div class="container">
+        <form th:action="@{/empresa/atualizar-perfil}" method="post" class="editar-form">
+            <div class="form-group">
+                <label for="nome">Nome da Empresa</label>
+                <input type="text" id="nome" name="nome" th:value="${empresa.nome}" required>
+                <div class="error-message" id="nomeError">Nome é obrigatório.</div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" th:value="${empresa.email}" required>
+                <div class="error-message" id="emailError">Email inválido.</div>
+            </div>
+
+            <div class="form-group">
+                <label for="senhaAtual">Senha Atual</label>
+                <input type="password" id="senhaAtual" name="senhaAtual" required>
+                <div class="error-message" id="senhaAtualError">Senha atual incorreta</div>
+            </div>
+
+            <div class="form-group">
+                <label for="novaSenha">Nova Senha</label>
+                <input type="password" id="novaSenha" name="novaSenha" required
+                       pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
+                       title="Mínimo de 6 caracteres, com letras maiúsculas, minúsculas e números">
+                <div class="error-message" id="novaSenhaError">Senha deve ter pelo menos 6 caracteres com letras maiúsculas, minúsculas e números.</div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmarSenha">Confirmar Nova Senha</label>
+                <input type="password" id="confirmarSenha" name="confirmarSenha" required>
+                <div class="error-message" id="confirmarSenhaError">As senhas não coincidem.</div>
+            </div>
+
+            <div class="form-group">
+                <label for="cnpj">CNPJ</label>
+                <input type="text" id="cnpj" name="cnpj" th:value="${empresa.cnpj}" required
+                       pattern="\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}"
+                       title="Digite o CNPJ no formato 00.000.000/0001-91"
+                       oninput="mascaraCNPJ(this)">
+
+                <div class="error-message" id="cnpjError">CNPJ é obrigatório no formato 00.000.000/0000-00</div>
+            </div>
+
+            <div class="form-group">
+                <label for="setor">Setor de Atuação</label>
+                <input type="text" id="setor" name="setor" th:value="${empresa.setor}" required>
+                <div class="error-message" id="setorError">Setor é obrigatório.</div>
+            </div>
+
+            <div class="form-group">
+                <label for="endereco">Endereço</label>
+                <input type="text" id="endereco" name="endereco" th:value="${empresa.endereco}" required>
+                <div class="error-message" id="enderecoError">Endereço é obrigatório.</div>
+            </div>
+
+            <div class="form-group">
+                <label for="telefone">Telefone</label>
+                <input type="text" id="telefone" name="telefone" th:value="${empresa.telefone}" required
+                       pattern="(\(\d{2}\)|\d{2})\s?\d{4,5}-\d{4}"
+                       title="Digite o telefone no formato (11) 99999-9999">
+                <div class="error-message" id="telefoneError">Telefone é obrigatório.</div>
+            </div>
+
+            <button type="submit" class="btn-submit">Salvar Alterações</button>
+            <a href="/empresa/perfil" class="btn-cancelar">Cancelar</a>
+        </form>
+    </div>
+</section>
+
+<!-- Rodapé -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2025 Vereda. Todos os direitos reservados.</p>
+        <div class="footer-links">
+            <a href="/empresa/perfil">Perfil</a>
+            <a href="/empresa/ajuda">Central de Ajuda</a>
+            <a href="/logout">Sair</a>
+        </div>
+    </div>
+</footer>
+
+<!-- Script de Validação -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const cnpjInput = document.getElementById('cnpj');
+        if (cnpjInput && cnpjInput.value.length === 14 && !cnpjInput.value.includes('.')) {
+            mascaraCNPJ(cnpjInput);
+        }
+
+        const form = document.querySelector('.editar-form');
+        form.addEventListener('submit', function (e) {
+            const nome = document.getElementById('nome').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const cnpj = document.getElementById('cnpj').value.trim();
+            const setor = document.getElementById('setor').value.trim();
+            const endereco = document.getElementById('endereco').value.trim();
+            const telefone = document.getElementById('telefone').value.trim();
+            const senhaAtual = document.getElementById('senhaAtual').value;
+            const novaSenha = document.getElementById('novaSenha').value;
+            const confirmarSenha = document.getElementById('confirmarSenha').value;
+
+            let valido = true;
+
+            const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const regexCNPJ = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/;
+            const regexTelefone = /^(\(\d{2}\)|\d{2})\s?\d{4,5}-\d{4}$/;
+            const regexSenha = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+
+            function validarCampo(id, condicao, errorId) {
+                if (!condicao) {
+                    document.getElementById(errorId).style.display = 'block';
+                    document.getElementById(id).style.borderColor = 'red';
+                    valido = false;
+                } else {
+                    document.getElementById(errorId).style.display = 'none';
+                    document.getElementById(id).style.borderColor = '';
+                }
+            }
+
+            validarCampo('nome', nome !== '', 'nomeError');
+            validarCampo('email', regexEmail.test(email), 'emailError');
+            validarCampo('cnpj', regexCNPJ.test(cnpj), 'cnpjError');
+            validarCampo('setor', setor !== '', 'setorError');
+            validarCampo('endereco', endereco !== '', 'enderecoError');
+            validarCampo('telefone', regexTelefone.test(telefone), 'telefoneError');
+
+            if (novaSenha || confirmarSenha) {
+                if (!senhaAtual) {
+                    document.getElementById('senhaAtualError').style.display = 'block';
+                    document.getElementById('senhaAtual').style.borderColor = 'red';
+                    e.preventDefault();
+                    alert("Informe a senha atual.");
+                    return;
+                }
+
+                if (!regexSenha.test(novaSenha)) {
+                    document.getElementById('novaSenhaError').style.display = 'block';
+                    document.getElementById('novaSenha').style.borderColor = 'red';
+                    e.preventDefault();
+                    alert("Senha inválida.");
+                    return;
+                }
+
+                if (novaSenha !== confirmarSenha) {
+                    document.getElementById('confirmarSenhaError').style.display = 'block';
+                    document.getElementById('confirmarSenha').style.borderColor = 'red';
+                    e.preventDefault();
+                    alert("Senhas não coincidem.");
+                    return;
+                }
+            }
+
+            if (!valido) {
+                e.preventDefault(); // Bloqueia envio se tiver campos inválidos
+            }
+        });
+    });
+
+    function mascaraCNPJ(input) {
+        let valor = input.value.replace(/\D/g, '');
+        if (valor.length > 14) valor = valor.slice(0, 14);
+        input.value = valor.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
+    }
+</script>
+
+
+</body>
+</html>
