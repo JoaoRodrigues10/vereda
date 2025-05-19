@@ -3,47 +3,67 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Vereda - Dashboard da Empresa</title>
-    <link rel="stylesheet" href="/css/homeEmpresa.css">
+    <title>Vereda - Home da Empresa</title>
+    <link rel="stylesheet" href="/css/homeEmpresa.css"> <!-- Estilo Compartilhado -->
 </head>
 <body>
 
-<!-- Cabeçalho -->
-<header class="dashboard-header">
+<!-- Cabeçalho com Nome da Empresa -->
+<header class="home-header">
     <div class="container">
         <h1 th:text="|Bem-vindo ${empresa.nome} à Vereda|">Bem-vindo à Vereda</h1>
         <p>Conectamos empresas a trabalhadores com apoio de ONGs</p>
     </div>
 </header>
 
-<!-- Navegação -->
-<nav class="nav-menu">
+<!-- Navegação Pós-Login -->
+<section class="navegacao">
     <div class="container">
+        <div class="navegacao-grid">
+            <a href="/dashboardEmpresa" class="navegacao-card">
+                <h3>Dashboard</h3>
+                <p>Resumo da sua conta e histórico de contratações</p>
+            </a>
+            <a href="/empresa/vagas" class="navegacao-card">
+                <h3>Minhas Vagas</h3>
+                <p>Gerencie vagas publicadas e candidaturas</p>
+            </a>
+            <a href="/empresa/perfil" class="navegacao-card">
+                <h3>Perfil da Empresa</h3>
+                <p>Atualize seus dados e garanta conformidade legal</p>
+            </a>
+            <a href="/empresa/matches" class="navegacao-card">
+                <h3>Matches Recomendados</h3>
+                <p>Trabalhadores vinculados por ONGs parceiras</p>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Seção de Contratações Temporárias (Destaque Legal) -->
+<section class="contratacoes-temporarias">
+    <div class="container">
+        <h2>Contratações Temporárias</h2>
+        <p>Use modelos de contrato conforme a <a href="https://www.planalto.gov.br/ccivil_03/leis/L6019compilado.htm#:~:text=13.429%2C%20de%202017)-,Art.,Par%C3%A1grafo%20%C3%BAnico." target="_blank" rel="noopener">Lei nº 6.019/1974</a>:</p>
         <ul>
-            <li></li><a href="#" data-page="/empresa/dashboard.html">Dashboard</a></li>
-            <li><a href="#" data-page="/empresa/vagas.html">Minhas Vagas</a></li>
-            <li><a href="#" data-page="/empresa/perfil.html">Perfil</a></li>
-            <li><a href="#" data-page="/empresa/configuracoes.html">Configurações</a></li>
+            <li><strong>Contrato Temporário:</strong> Até 180 dias (prorrogável para 270 dias).</li>
+            <li><strong>Trabalho por Prazo Determinado:</strong> Até 2 anos com registro em carteira.</li>
+            <li><strong>Trabalho Intermitente:</strong> Serviços esporádicos com pagamento imediato.</li>
         </ul>
     </div>
-</nav>
-
-<!-- Área de Conteúdo Dinâmico -->
-<main id="conteudo" class="container">
-    <p>Selecione uma opção no menu para visualizar o conteúdo.</p>
-</main>
+</section>
 
 <!-- Rodapé -->
 <footer class="footer">
     <div class="container">
         <p>&copy; 2025 Vereda. Todos os direitos reservados.</p>
         <div class="footer-links">
-            <a href="/empresa/perfil.html">Perfil</a>
-            <a href="/empresa/ajuda.html">Central de Ajuda</a>
-            <a href="/">Sair</a>
+            <a href="/empresa/perfil">Perfil</a>
+            <a href="/empresa/ajuda">Central de Ajuda</a>
+            <a href="/logout">Sair</a>
         </div>
     </div>
 </footer>
-<script src="/js/homeEmpresa.js"></script>
+
 </body>
 </html>

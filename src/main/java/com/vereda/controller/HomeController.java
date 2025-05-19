@@ -61,6 +61,20 @@ public class HomeController {
         return "homeEmpresa";
     }
 
+    @GetMapping("/dashboardEmpresa")
+    public String mostrarDashboardEmpresa(Model model, HttpSession session) {
+        Long empresaId = (Long) session.getAttribute("empresaId");
+
+        Optional<Empresa> empresaOpt = empresaRepository.findById(empresaId);
+        if (empresaOpt.isEmpty()) {
+            return "error";
+        }
+
+        model.addAttribute("empresa", empresaOpt.get());
+        return "dashboardEmpresa";
+    }
+
+
     @GetMapping("/homeOng")
     public String mostrarHomeOng(Model model, HttpSession session) {
         Long ongId = (Long) session.getAttribute("ongId");

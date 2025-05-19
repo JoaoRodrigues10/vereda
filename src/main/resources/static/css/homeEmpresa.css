@@ -1,171 +1,90 @@
-/* Reset básico */
+:root {
+    --primary: #3B82F6; /* Azul para empresas */
+    --secondary: #10B981; /* Verde para destaques */
+    --light: #F9FAFB;
+    --dark: #1F2937;
+    --gray: #6B7280;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-/* Variáveis CSS */
-:root {
-    --primary: #3B82F6; /* Azul para empresas */
-    --secondary: #10B981; /* Verde para destaque */
-    --light: #F9FAFB;
-    --dark: #1F2937;
-    --gray: #6B7280;
-    --error: #EF4444;
-    --font: 'Inter', sans-serif;
-    --spacing: 1.5rem;
-}
-
-/* Layout Geral */
-body {
-    font-family: var(--font);
-    background: var(--light);
-    color: var(--dark);
-    line-height: 1.6;
+    font-family: 'Inter', sans-serif;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 var(--spacing);
+    padding: 0 1.5rem;
 }
 
 /* Cabeçalho */
-.dashboard-header {
+.home-header {
     background: linear-gradient(to right, var(--primary), #60A5FA);
     color: white;
     padding: 3rem 1.5rem;
     text-align: center;
 }
-.dashboard-header h1 {
+
+.home-header h1 {
     font-size: 1.8rem;
     margin-bottom: 0.5rem;
 }
-.dashboard-header p {
+
+.home-header p {
     font-size: 1.1rem;
     opacity: 0.9;
 }
 
-/* Navegação */
-.nav-menu {
-    background: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    padding: 1rem 0;
-}
-.nav-menu ul {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    list-style: none;
-}
-.nav-menu li a {
-    text-decoration: none;
-    color: var(--gray);
-    font-weight: 500;
-    position: relative;
-}
-.nav-menu li a.active {
-    color: var(--primary);
-}
-.nav-menu li a::after {
-    content: '';
-    position: absolute;
-    width: 0%;
-    height: 2px;
-    background: var(--primary);
-    left: 0;
-    bottom: -5px;
-    transition: width 0.3s;
-}
-.nav-menu li a:hover::after,
-.nav-menu li a.active::after {
-    width: 100%;
-}
-
-/* Estatísticas */
-.stats-section {
+/* Navegação Pós-Login */
+.navegacao {
     background: white;
     padding: 2rem 0;
 }
-.stats-grid {
+
+.navegacao-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
-    padding: 0 var(--spacing);
+    padding: 0 1.5rem;
 }
-.stat-card {
+
+.navegacao-card {
     background: var(--light);
     border-radius: 10px;
     padding: 1.5rem;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+    color: var(--dark);
     transition: transform 0.3s ease;
-}
-.stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-}
-.stat-number {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--secondary);
-    margin-bottom: 0.5rem;
-    display: block;
-}
-.stat-label {
-    font-size: 1rem;
-    color: var(--gray);
 }
 
-/* Seção de Vagas */
-.vagas-section {
-    padding: 2rem 0;
-}
-.vagas-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    padding: 0 var(--spacing);
-}
-.vaga-card {
-    background: white;
-    border-radius: 10px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease;
-}
-.vaga-card:hover {
+.navegacao-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
-.vaga-card h3 {
-    margin-bottom: 1rem;
-}
-.vaga-card p {
-    font-size: 0.95rem;
-    color: var(--gray);
+
+.navegacao-card h3 {
     margin-bottom: 0.5rem;
 }
 
-/* CTA Final */
-.cta-section {
+/* Seção de Contratações Temporárias */
+.contratacoes-temporarias {
     background: #BFDBFE;
     padding: 2rem 0;
-    text-align: center;
 }
-.cta-button {
-    background: var(--primary);
-    color: white;
-    padding: 0.85rem 1.5rem;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s ease;
+
+.contratacoes-temporarias h2 {
+    margin-bottom: 1rem;
 }
-.cta-button:hover {
-    background: #2563EB;
+
+.contratacoes-temporarias ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+}
+
+.contratacoes-temporarias li {
+    margin-bottom: 0.5rem;
 }
 
 /* Rodapé */
@@ -175,18 +94,20 @@ body {
     padding: 2rem 0;
     text-align: center;
 }
-.footer p {
-    font-size: 0.9rem;
-}
+
 .footer-links {
     display: flex;
     justify-content: center;
     gap: 1.5rem;
     margin-top: 1rem;
 }
+
 .footer-links a {
     color: #9CA3AF;
     text-decoration: none;
     font-size: 0.9rem;
 }
-.footer-links a:hover
+
+.footer-links a:hover {
+    text-decoration: underline;
+}

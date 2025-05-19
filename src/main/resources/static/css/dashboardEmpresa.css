@@ -1,0 +1,175 @@
+/* Cores e Variáveis */
+:root {
+    --primary: #3B82F6; /* Azul para empresas */
+    --secondary: #10B981; /* Verde para destaques */
+    --light: #F9FAFB;
+    --dark: #1F2937;
+    --gray: #6B7280;
+    --white: #FFFFFF;
+    --font: 'Inter', sans-serif;
+}
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilo global */
+body {
+    font-family: var(--font);
+    background-color: var(--light);
+    color: var(--dark);
+    line-height: 1.6;
+}
+
+/* Container padrão */
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* Cabeçalho do Dashboard */
+.dashboard-header {
+    background: linear-gradient(to right, var(--primary), #60A5FA);
+    color: white;
+    padding: 3rem 0;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-header h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Seção de Estatísticas */
+.stats-section {
+    padding: 2rem 0;
+    background-color: white;
+}
+
+.stats-section h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    color: var(--dark);
+    margin-bottom: 1.5rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    padding: 0 1.5rem;
+}
+
+.stat-card {
+    background: var(--light);
+    border-left: 5px solid var(--secondary);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--secondary);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.stat-label {
+    font-size: 1rem;
+    color: var(--gray);
+}
+
+/* Call to Action (CTA) */
+.cta-section {
+    background: linear-gradient(to right, var(--primary), #60A5FA);
+    color: white;
+    padding: 2.5rem 0;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.cta-section h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+}
+
+.cta-section p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.cta-button {
+    background: var(--white);
+    color: var(--primary);
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s ease;
+}
+
+.cta-button:hover {
+    background: #BFDBFE;
+    color: #1E3A8A;
+}
+
+/* Rodapé */
+.footer {
+    background: var(--dark);
+    color: #D1D5DB;
+    padding: 2rem 0;
+    text-align: center;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.footer-links a {
+    color: #9CA3AF;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+.voltar-button {
+    display: inline-block;
+    background: var(--secondary); /* Verde */
+    color: var(--white);
+    padding: 0.75rem 1.5rem;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s ease;
+}
+
+.voltar-button:hover {
+    background: #059669; /* Verde mais escuro */
+}
