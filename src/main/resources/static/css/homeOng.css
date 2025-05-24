@@ -219,6 +219,22 @@ body {
     text-decoration: underline;
 }
 
+.info-cards .card {
+    transition: all 0.3s ease;
+}
+
+.info-cards .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+#contadorTrabalhadores {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #005a8d;
+    margin-top: 0.5rem;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
     .btn-group {

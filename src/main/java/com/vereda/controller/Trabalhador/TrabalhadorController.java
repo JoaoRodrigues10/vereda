@@ -4,14 +4,17 @@ import com.vereda.controller.Ong.CadastroOngDto;
 import com.vereda.service.EmpresaService;
 import com.vereda.service.OngService;
 import com.vereda.service.TrabalhadorService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/ong/trabalhador")
+@CrossOrigin(origins = "*") // Adicione esta anotação para habilitar CORS
 public class TrabalhadorController {
     private final TrabalhadorService trabalhadorService;
 
@@ -19,28 +22,35 @@ public class TrabalhadorController {
         this.trabalhadorService = trabalhadorService;
     }
 
-    @PostMapping("/trabalhador")
-    public ResponseEntity<Void> cadastroTrabalhador(@RequestBody CadastroTrabalhadorDto cadastroTrabalhadorDto) {
-        System.out.println("Dados recebidos: " + cadastroTrabalhadorDto);
-
-        // Validações básicas
-        if (cadastroTrabalhadorDto.cpf() == null || cadastroTrabalhadorDto.cpf().isBlank()) {
-            System.out.println("CPF não informado");
-            return ResponseEntity.badRequest().build();
-        }
-
-        if (cadastroTrabalhadorDto.data_nascimento() == null) {
-            System.out.println("Data de nascimento não informada");
-            return ResponseEntity.badRequest().build();
-        }
-
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> cadastroTrabalhador(@Valid @RequestBody CadastroTrabalhadorDto cadastroTrabalhadorDto) {
         try {
+            // Validações adicionais
+            if (cadastroTrabalhadorDto.cpf() == null || cadastroTrabalhadorDto.cpf().isBlank()) {
+                return ResponseEntity.badRequest().body(Map.of(
+                        "success", false,
+                        "message", "CPF é obrigatório"
+                ));
+            }
+
             Long trabalhadorId = trabalhadorService.cadastrarTrabalhador(cadastroTrabalhadorDto);
-            System.out.println("Trabalhador cadastrado com ID: " + trabalhadorId);
-            return ResponseEntity.ok().build();
+
+            return ResponseEntity.ok().body(Map.of(
+                    "success", true,
+                    "id", trabalhadorId,
+                    "message", "Trabalhador cadastrado com sucesso"
+            ));
         } catch (Exception e) {
-            System.out.println("Erro ao cadastrar trabalhador: " + e.getMessage());
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                    "success", false,
+                    "message", e.getMessage()
+            ));
         }
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countTrabalhadores() {
+        long count = trabalhadorService.countTrabalhadores();
+        return ResponseEntity.ok(count);
     }
 }

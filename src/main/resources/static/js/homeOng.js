@@ -22,4 +22,39 @@ document.querySelectorAll('.nav-menu a').forEach(link => {
         document.querySelector('.nav-menu a[data-page="/ong/dashboard-ong.html"]').click();
     });
 
+
+
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Função para carregar a contagem de trabalhadores
+    async function carregarContagemTrabalhadores() {
+        try {
+            const response = await fetch('/ong/trabalhador/count');
+            if (!response.ok) {
+                throw new Error('Erro ao carregar dados');
+            }
+            const count = await response.json();
+            document.getElementById('contadorTrabalhadores').textContent = count;
+        } catch (error) {
+            console.error('Erro:', error);
+            document.getElementById('contadorTrabalhadores').textContent = 'Erro';
+        }
+    }
+
+    // Carrega os dados quando a página é aberta
+    carregarContagemTrabalhadores();
+
+    // Atualiza a cada 30 segundos (opcional)
+    setInterval(carregarContagemTrabalhadores, 30000);
+});
+
+const socket = new WebSocket(`ws://${window.location.host}/ong/trabalhador/updates`);
+
+socket.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+    if (data.type === 'count_update') {
+        document.getElementById('contadorTrabalhadores').textContent = data.count;
+    }
+};
+

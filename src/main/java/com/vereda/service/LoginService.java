@@ -48,10 +48,14 @@ public class LoginService {
         if (ongOpt.isEmpty()) {
             return new AuthResponse("Email não encontrado", null);
         }
+
         Ong ong = ongOpt.get();
         if (!passwordEncoder.matches(request.senha(), ong.getSenha())) {
             return new AuthResponse("Senha incorreta", null);
         }
+
+        session.setAttribute("ongId", ong.getIdOng());
+        System.out.println("🔐 ongId SALVO NA SESSÃO: " + session.getAttribute("ongId"));
         return new AuthResponse("Login bem-sucedido", "ONG");
     }
 }

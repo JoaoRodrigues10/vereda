@@ -14,12 +14,10 @@ import java.util.UUID;
 public class OngService {
     private final OngRepository ongRepository;
     private  final PasswordEncoder passwordEncoder;
-    private final EmpresaRepository empresaRepository;
 
     public OngService(OngRepository ongRepository, PasswordEncoder passwordEncoder, EmpresaRepository empresaRepository) {
         this.ongRepository = ongRepository;
         this.passwordEncoder = passwordEncoder;
-        this.empresaRepository = empresaRepository;
     }
 
     public Long cadastrarOng(CadastroOngDto cadastroOngDto) {

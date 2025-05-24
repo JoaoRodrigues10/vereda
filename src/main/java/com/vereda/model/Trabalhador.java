@@ -29,6 +29,12 @@ public class Trabalhador {
     @Column(name = "data_nascimento", nullable = false)
     private LocalDate dataNascimento;
 
+
+
+    @Column(name = "habilidades")
+    private String habilidades;
+
+
     @Column(name = "telefone")
     private String telefone;
 
@@ -45,11 +51,13 @@ public class Trabalhador {
 
     }
 
-    public Trabalhador(Long idTrabalhador, String nome, String email, String cpf, LocalDate data_nascimento, String telefone, String endereco, Instant creationTimestamp, Instant updateTimestamp) {
+    public Trabalhador(Long idTrabalhador, String nome, String email, String cpf, LocalDate data_nascimento, String habilidades, String telefone, String endereco, Instant creationTimestamp, Instant updateTimestamp) {
         this.idTrabalhador = idTrabalhador;
         this.nome = nome;
         this.email = email;
         this.cpf = cpf;
+        this.dataNascimento = data_nascimento;
+        this.habilidades = habilidades;
         this.telefone = telefone;
         this.endereco = endereco;
         this.creationTimestamp = creationTimestamp;
@@ -94,6 +102,14 @@ public class Trabalhador {
 
     public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
+    }
+
+    public String getHabilidades() {
+        return habilidades;
+    }
+
+    public void setHabilidades(String habilidades) {
+        this.habilidades = habilidades;
     }
 
     public String getTelefone() {
