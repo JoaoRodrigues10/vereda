@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Vereda - Trabalhadores Cadastrados</title>
+    <link rel="stylesheet" href="/css/homeOng.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos específicos para a página de trabalhadores */
+        .trabalhadores-container {
+            padding: 2rem 0;
+        }
+
+        .trabalhadores-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .trabalhadores-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .trabalhador-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            transition: transform 0.2s;
+        }
+
+        .trabalhador-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .trabalhador-nome {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .trabalhador-info {
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .trabalhador-habilidades {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .habilidade-tag {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .search-bar {
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 300px;
+            font-size: 1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<header class="navbar">
+    <div class="container">
+        <div class="logo">Vereda</div>
+        <nav class="nav-links">
+            <a href="/ong/dashboard.html">Dashboard</a>
+            <a href="/ong/trabalhadores.html" class="active">Trabalhadores</a>
+            <a href="/ong/ajuda.html">Ajuda</a>
+            <a href="/logout">Sair</a>
+        </nav>
+    </div>
+</header>
+
+<!-- Conteúdo Principal -->
+<main class="container trabalhadores-container">
+    <div class="trabalhadores-header">
+        <h1>Trabalhadores Cadastrados</h1>
+        <div>
+            <input type="text" class="search-bar" placeholder="Buscar trabalhadores...">
+            <a href="/ong/cadastro-trabalhador.html" class="btn-primary">+ Novo Trabalhador</a>
+        </div>
+    </div>
+
+    <div class="trabalhadores-list" id="trabalhadoresList">
+        <!-- Os trabalhadores serão carregados aqui via JavaScript -->
+        <div class="empty-state">
+            <p>Carregando trabalhadores...</p>
+        </div>
+    </div>
+</main>
+
+<!-- Rodapé -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2025 Vereda. Todos os direitos reservados.</p>
+        <div class="footer-links">
+            <a href="/ong/perfil.html">Perfil</a>
+            <a href="/ong/ajuda.html">Central de Ajuda</a>
+            <a href="/logout">Sair</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Função para carregar os trabalhadores
+        async function carregarTrabalhadores() {
+            try {
+                const response = await fetch('/ong/trabalhador/list');
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar trabalhadores');
+                }
+
+                const trabalhadores = await response.json();
+                const lista = document.getElementById('trabalhadoresList');
+
+                if (trabalhadores.length === 0) {
+                    lista.innerHTML = `
+                        <div class="empty-state">
+                            <p>Nenhum trabalhador cadastrado ainda.</p>
+                            <a href="/ong/cadastro-trabalhador.html" class="btn-primary">Cadastrar primeiro trabalhador</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                lista.innerHTML = trabalhadores.map(trabalhador => `
+                    <div class="trabalhador-card">
+                        <h3 class="trabalhador-nome">${trabalhador.nome}</h3>
+                        <div class="trabalhador-info"><strong>CPF:</strong> ${trabalhador.cpf}</div>
+                        <div class="trabalhador-info"><strong>Email:</strong> ${trabalhador.email}</div>
+                        <div class="trabalhador-info"><strong>Telefone:</strong> ${trabalhador.telefone || 'Não informado'}</div>
+                        <div class="trabalhador-habilidades">
+                            <strong>Habilidades:</strong><br>
+                            ${trabalhador.habilidades ? trabalhador.habilidades.split(',').map(h => `<span class="habilidade-tag">${h.trim()}</span>`).join('') : 'Não informadas'}
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                console.error('Erro:', error);
+                document.getElementById('trabalhadoresList').innerHTML = `
+                    <div class="empty-state">
+                        <p>Ocorreu um erro ao carregar os trabalhadores. Por favor, tente novamente.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Carregar trabalhadores quando a página é aberta
+        carregarTrabalhadores();
+
+        // Adicionar funcionalidade de busca (simplificada)
+        document.querySelector('.search-bar').addEventListener('input', function(e) {
+            const termo = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.trabalhador-card');
+
+            cards.forEach(card => {
+                const textoCard = card.textContent.toLowerCase();
+                if (textoCard.includes(termo)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

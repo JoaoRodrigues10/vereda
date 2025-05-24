@@ -34,11 +34,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!response.ok) {
                 throw new Error('Erro ao carregar dados');
             }
-            const count = await response.json();
-            document.getElementById('contadorTrabalhadores').textContent = count;
+            const data = await response.json();
+            document.getElementById('contadorTrabalhadores').textContent = data.count;
         } catch (error) {
             console.error('Erro:', error);
-            document.getElementById('contadorTrabalhadores').textContent = 'Erro';
+            document.getElementById('contadorTrabalhadores').textContent = 'Erro ao carregar';
         }
     }
 

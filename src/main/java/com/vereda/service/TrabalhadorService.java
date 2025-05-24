@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 public class TrabalhadorService {
@@ -53,5 +54,9 @@ public class TrabalhadorService {
 
     public long countTrabalhadores() {
         return trabalhadorRepository.count();
+    }
+
+    public List<Trabalhador> listarTrabalhadores() {
+        return trabalhadorRepository.findAll();
     }
 }

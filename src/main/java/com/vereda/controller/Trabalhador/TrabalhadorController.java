@@ -1,6 +1,7 @@
 package com.vereda.controller.Trabalhador;
 
 import com.vereda.controller.Ong.CadastroOngDto;
+import com.vereda.model.Trabalhador;
 import com.vereda.service.EmpresaService;
 import com.vereda.service.OngService;
 import com.vereda.service.TrabalhadorService;
@@ -10,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -49,8 +51,14 @@ public class TrabalhadorController {
     }
 
     @GetMapping("/count")
-    public ResponseEntity<Long> countTrabalhadores() {
+    public ResponseEntity<Map<String, Long>> countTrabalhadores() {
         long count = trabalhadorService.countTrabalhadores();
-        return ResponseEntity.ok(count);
+        return ResponseEntity.ok(Map.of("count", count));
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<Trabalhador>> listarTrabalhadores() {
+        List<Trabalhador> trabalhadores = trabalhadorService.listarTrabalhadores(); // CORRETO - usando o service
+        return ResponseEntity.ok(trabalhadores);
     }
 }
