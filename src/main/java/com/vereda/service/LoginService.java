@@ -31,31 +31,32 @@ public class LoginService {
     public AuthResponse autenticarEmpresa(LoginRequest request) {
         Optional<Empresa> empresaOpt = empresaRepository.findByEmail(request.email());
         if (empresaOpt.isEmpty()) {
-            return new AuthResponse("Email não encontrado", null);
+            return new AuthResponse("Email não encontrado", null, null);
         }
         Empresa empresa = empresaOpt.get();
         if (!passwordEncoder.matches(request.senha(), empresa.getSenha())) {
-            return new AuthResponse("Senha incorreta", null);
+            return new AuthResponse("Senha incorreta", null, null);
         }
 
         session.setAttribute("empresaId", empresa.getIdEmpresa());
-        System.out.println("🔐 empresaId SALVO NA SESSÃO: " + session.getAttribute("empresaId"));
-        return new AuthResponse("Login bem-sucedido", "EMPRESA");
+        System.out.println("🔐 empresaId SALVO NA SESSÃO: " + empresa.getIdEmpresa());
+        return new AuthResponse("Login bem-sucedido", "EMPRESA", empresa.getIdEmpresa());
     }
 
     public AuthResponse autenticarOng(LoginRequest request) {
         Optional<Ong> ongOpt = ongRepository.findByEmail(request.email());
         if (ongOpt.isEmpty()) {
-            return new AuthResponse("Email não encontrado", null);
+            return new AuthResponse("Email não encontrado", null, null);
         }
 
         Ong ong = ongOpt.get();
         if (!passwordEncoder.matches(request.senha(), ong.getSenha())) {
-            return new AuthResponse("Senha incorreta", null);
+            return new AuthResponse("Senha incorreta", null, null);
         }
 
         session.setAttribute("ongId", ong.getIdOng());
-        System.out.println("🔐 ongId SALVO NA SESSÃO: " + session.getAttribute("ongId"));
-        return new AuthResponse("Login bem-sucedido", "ONG");
+        System.out.println("🔐 ongId SALVO NA SESSÃO: " + ong.getIdOng());
+        return new AuthResponse("Login bem-sucedido", "ONG", ong.getIdOng());
     }
+
 }

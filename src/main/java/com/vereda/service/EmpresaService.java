@@ -51,4 +51,10 @@ public class EmpresaService {
             throw e;
         }
     }
+
+    public Empresa buscarPorEmail(String email) {
+        return empresaRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Empresa não encontrada com email: " + email));
+    }
+
 }

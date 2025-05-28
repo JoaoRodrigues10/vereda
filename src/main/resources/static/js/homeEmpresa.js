@@ -22,4 +22,11 @@ document.querySelectorAll('.nav-menu a').forEach(link => {
         document.querySelector('.nav-menu a[data-page="/empresa/dashboard.html"]').click();
     });
 
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const empresaId = document.body.getAttribute("data-empresa-id");
+        if (empresaId) {
+            localStorage.setItem("empresaId", empresaId);
+        }
+    });
 });

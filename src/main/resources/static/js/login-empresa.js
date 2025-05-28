@@ -11,6 +11,8 @@ document.getElementById('loginEmpresaForm').addEventListener('submit', function 
         .then(res => res.json())
         .then(data => {
             if (data.message === "Login bem-sucedido") {
+                // Salva o ID da empresa no localStorage
+                localStorage.setItem('empresaId', data.id);
                 window.location.href = '/homeEmpresa'; // Redirecione conforme necessário
             } else {
                 document.getElementById('errorMessage').textContent = data.message;

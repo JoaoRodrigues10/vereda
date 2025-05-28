@@ -55,4 +55,9 @@ public class VagaService {
         vaga.setAtiva(false);
         return vagaRepository.save(vaga);
     }
+
+    public Vaga salvar(Vaga vaga) {
+        return vagaRepository.save(vaga);
+    }
+
 }

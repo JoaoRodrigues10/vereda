@@ -8,23 +8,35 @@
 <body>
 <div class="container">
     <h1>Cadastrar Nova Vaga</h1>
+
     <form id="vaga-form">
         <label for="titulo">Título:</label>
-        <input type="text" id="titulo" name="titulo" required>
+        <input type="text" id="titulo" name="titulo" required />
 
         <label for="descricao">Descrição:</label>
         <textarea id="descricao" name="descricao" rows="4" required></textarea>
 
         <label for="local">Local:</label>
-        <input type="text" id="local" name="local" required>
+        <input type="text" id="local" name="local" required />
 
-        <label for="empresaId">ID da Empresa:</label>
-        <input type="number" id="empresaId" name="empresaId" required>
+        <input type="hidden" id="empresaId" name="empresaId" />
+        <input type="hidden" id="ativa" name="ativa" value="true" />
 
         <button type="submit">Cadastrar</button>
         <p id="mensagem"></p>
     </form>
 </div>
+
+<script>
+    // Preenche automaticamente o campo empresaId com o valor do localStorage
+    const empresaId = localStorage.getItem('empresaId');
+    if (empresaId) {
+        document.getElementById('empresaId').value = empresaId;
+        document.getElementById('empresaIdPreview').textContent = empresaId;
+    } else {
+        document.getElementById('empresaIdPreview').textContent = 'Não encontrado no localStorage';
+    }
+</script>
 
 <script src="/js/vaga.js"></script>
 </body>
