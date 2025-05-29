@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Vereda - Cadastro Colaborador</title>
+    <link rel="stylesheet" href="/css/cadastro-trabalhador.css" />
 </head>
 <body>
 
@@ -47,143 +48,14 @@
             <input type="text" id="habilidades" name="habilidades" />
         </div>
 
+        <input type="hidden" id="ongId" name="ongId" />
+
+
         <button type="submit" class="btn-salvar">Salvar Alterações</button>
     </form>
 </div>
 
-<style>
-    .perfil-container {
-        max-width: 600px;
-        margin: 2rem auto;
-        padding: 2rem;
-        background: #f9f9f9;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    }
+<script src="/js/cadastro-trabalhador.js"></script>
 
-    .perfil-container h2 {
-        margin-bottom: 1.5rem;
-        text-align: center;
-        color: #005a8d;
-    }
-
-    .form-group {
-        margin-bottom: 1.2rem;
-    }
-
-    .form-group label {
-        display: block;
-        font-weight: 600;
-        margin-bottom: 0.4rem;
-        color: #333;
-    }
-
-    .form-group input {
-        width: 100%;
-        padding: 0.6rem;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 1rem;
-    }
-
-    .btn-salvar {
-        width: 100%;
-        padding: 0.8rem;
-        background-color: #005a8d;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        font-size: 1.1rem;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background 0.3s;
-    }
-
-    .btn-salvar:hover {
-        background-color: #00446a;
-    }
-
-    /* Adicione ao seu CSS existente */
-    input[type="date"] {
-        /* Garante consistência com outros inputs */
-        height: 2.5rem;
-        padding: 0.5rem;
-    }
-
-    /* Melhora o feedback de validação */
-    input:invalid {
-        border-color: #ff6b6b;
-    }
-
-    /* Estilo para mensagens de erro (se for adicionar) */
-    .error-message {
-        color: #ff6b6b;
-        font-size: 0.8rem;
-        margin-top: 0.2rem;
-    }
-
-</style>
-
-<script>
-    document.getElementById('perfilForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        // Validação da data de nascimento
-        const dataNascimentoInput = document.getElementById('dataNascimento');
-        if (!dataNascimentoInput.value) {
-            alert('Data de nascimento é obrigatória!');
-            return;
-        }
-
-        const formData = {
-            nome: document.getElementById('nome').value,
-            email: document.getElementById('email').value,
-            cpf: document.getElementById('cpf').value.replace(/\D/g, ''),
-            data_nascimento: dataNascimentoInput.value, // Garante o envio
-            telefone: document.getElementById('telefone').value.replace(/\D/g, ''),
-            endereco: document.getElementById('endereco').value,
-            habilidades: document.getElementById('habilidades').value || null
-        };
-
-        console.log('Dados enviados:', formData); // Para debug
-
-        try {
-            const response = await fetch('http://localhost:8080/ong/trabalhador', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Erro no servidor');
-            }
-
-            const data = await response.json();
-            alert(`Cadastro realizado com sucesso! ID: ${data.id}`);
-        } catch (error) {
-            console.error('Erro detalhado:', error);
-            alert(`Erro: ${error.message || 'Falha na conexão com o servidor'}`);
-        }
-    });
-
-    // Máscaras para CPF e Telefone
-    document.getElementById('cpf').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 3) value = value.replace(/^(\d{3})/, '$1.');
-        if (value.length > 7) value = value.replace(/^(\d{3})\.(\d{3})/, '$1.$2.');
-        if (value.length > 11) value = value.replace(/^(\d{3})\.(\d{3})\.(\d{3})/, '$1.$2.$3-');
-        e.target.value = value.substring(0, 14);
-    });
-
-    document.getElementById('telefone').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 0) value = value.replace(/^(\d{0,2})/, '($1');
-        if (value.length > 3) value = value.replace(/^(\(\d{2})(\d)/, '$1) $2');
-        if (value.length > 10) value = value.replace(/(\d{4})(\d)/, '$1-$2');
-        e.target.value = value.substring(0, 15);
-    });
-</script>
+    </body>
+</html>

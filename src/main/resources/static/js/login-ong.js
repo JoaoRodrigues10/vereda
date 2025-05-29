@@ -11,6 +11,8 @@ document.getElementById('loginOngForm').addEventListener('submit', function (e) 
         .then(res => res.json())
         .then(data => {
             if (data.message === "Login bem-sucedido") {
+                // Salva o ID da empresa no localStorage
+                localStorage.setItem('ongId', data.id);
                 window.location.href = '/homeOng'; // Redirecione conforme necessário
             } else {
                 document.getElementById('errorMessage').textContent = data.message;

@@ -13,5 +13,6 @@ public record CadastroTrabalhadorDto(
         @NotNull LocalDate data_nascimento,
         String telefone,
         String endereco,
-        String habilidades
+        String habilidades,
+        @NotNull Long idOng
 ) {}

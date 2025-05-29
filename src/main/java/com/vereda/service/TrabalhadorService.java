@@ -4,8 +4,10 @@ import com.vereda.controller.Empresa.CadastroEmpresaDto;
 import com.vereda.controller.Trabalhador.CadastroTrabalhadorDto;
 import com.vereda.model.Empresa;
 import com.vereda.model.Trabalhador;
+import com.vereda.repository.OngRepository;
 import com.vereda.repository.TrabalhadorRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +23,9 @@ public class TrabalhadorService {
         this.trabalhadorRepository = trabalhadorRepository;
     }
 
+    @Autowired
+    private OngRepository ongRepository;
+
     @Transactional
     public Long cadastrarTrabalhador(CadastroTrabalhadorDto cadastroTrabalhadorDto) {
         // Validações
@@ -31,6 +36,9 @@ public class TrabalhadorService {
         if (cadastroTrabalhadorDto.data_nascimento() == null) {
             throw new IllegalArgumentException("Data de nascimento é obrigatória");
         }
+
+        var ong = ongRepository.findById(cadastroTrabalhadorDto.idOng())
+                .orElseThrow(() -> new IllegalArgumentException("ONG não encontrada"));
 
         var trabalhador = new Trabalhador(
                 null,
@@ -44,6 +52,7 @@ public class TrabalhadorService {
                 Instant.now(),
                 null
         );
+        trabalhador.setOng(ong);
 
         try {
             return trabalhadorRepository.save(trabalhador).getIdTrabalhador();

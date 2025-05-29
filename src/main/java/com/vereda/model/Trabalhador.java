@@ -47,6 +47,18 @@ public class Trabalhador {
     @UpdateTimestamp
     private Instant updateTimestamp;
 
+    @ManyToOne
+    @JoinColumn(name = "id_ong", nullable = false)
+    private Ong ong;
+
+    public Ong getOng() {
+        return ong;
+    }
+
+    public void setOng(Ong ong) {
+        this.ong = ong;
+    }
+
     public Trabalhador(){
 
     }
