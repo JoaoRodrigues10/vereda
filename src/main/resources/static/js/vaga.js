@@ -20,6 +20,7 @@ document.getElementById("vaga-form").addEventListener("submit", function (e) {
             if (response.ok) {
                 document.getElementById("mensagem").textContent = "Vaga cadastrada com sucesso!";
                 document.getElementById("vaga-form").reset();
+                window.location.href = "/empresa/minhasVagas.html";
             } else {
                 return response.text().then(text => { throw new Error(text); });
             }

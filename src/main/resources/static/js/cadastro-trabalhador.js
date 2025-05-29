@@ -46,6 +46,7 @@ document.getElementById('perfilForm').addEventListener('submit', async (e) => {
 
         const data = await response.json();
         alert(`Cadastro realizado com sucesso!`);
+        window.location.href = "/ong/trabalhadores.html";
     } catch (error) {
         console.error('Erro detalhado:', error);
         alert(`Erro: ${error.message || 'Falha na conexão com o servidor'}`);
