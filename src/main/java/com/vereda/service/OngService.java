@@ -48,7 +48,7 @@ public class OngService {
             System.out.println("Ong salva com ID: " + saved.getIdOng());
             return saved.getIdOng();
         }catch (Exception e){
-            System.out.println("Erro ao salvar empresa" + e.getMessage());
+            System.out.println("Erro ao salvar ong" + e.getMessage());
             throw e;
         }
     }

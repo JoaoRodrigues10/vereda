@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>ONGs Cadastradas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .ong-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .ong-card p {
+            margin: 4px 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>ONGs Cadastradas</h1>
+<div id="lista-ongs"></div>
+
+<script>
+    fetch("http://localhost:8080/api/ongs")
+        .then(response => response.json())
+        .then(ongs => {
+            const container = document.getElementById("lista-ongs");
+            ongs.forEach(ong => {
+                const div = document.createElement("div");
+                div.className = "ong-card";
+                div.innerHTML = `
+                        <h2>${ong.nome}</h2>
+                        <p><strong>Email:</strong> ${ong.email}</p>
+                        <p><strong>Telefone:</strong> ${ong.telefone}</p>
+                        <p><strong>Endereço:</strong> ${ong.endereco}</p>
+                        <p><strong>Setor:</strong> ${ong.setor}</p>
+                        <p><strong>CNPJ:</strong> ${ong.cnpj}</p>
+                    `;
+                container.appendChild(div);
+            });
+        })
+        .catch(error => {
+            document.getElementById("lista-ongs").innerHTML = "<p>Erro ao carregar ONGs.</p>";
+            console.error(error);
+        });
+</script>
+
+</body>
+</html>

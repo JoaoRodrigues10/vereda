@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Empresas Cadastradas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .empresa-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .empresa-card p {
+            margin: 4px 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Empresas Cadastradas</h1>
+<div id="lista-empresas"></div>
+
+<script>
+    fetch("http://localhost:8080/api/empresas")
+            .then(response => response.json())
+        .then(empresas => {
+            const container = document.getElementById("lista-empresas");
+            empresas.forEach(emp => {
+                const div = document.createElement("div");
+                div.className = "empresa-card";
+                div.innerHTML = `
+                        <h2>${emp.nome}</h2>
+                        <p><strong>Email:</strong> ${emp.email}</p>
+                        <p><strong>Telefone:</strong> ${emp.telefone}</p>
+                        <p><strong>Endereço:</strong> ${emp.endereco}</p>
+                        <p><strong>Setor:</strong> ${emp.setor}</p>
+                        <p><strong>CNPJ:</strong> ${emp.cnpj}</p>
+                    `;
+                container.appendChild(div);
+            });
+        })
+        .catch(error => {
+            document.getElementById("lista-empresas").innerHTML = "<p>Erro ao carregar empresas.</p>";
+            console.error(error);
+        });
+</script>
+
+</body>
+</html>
