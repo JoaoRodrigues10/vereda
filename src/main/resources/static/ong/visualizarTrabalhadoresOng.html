@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Trabalhadores por Status</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #f4f7fb;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #0a74da;
+            margin-bottom: 40px;
+        }
+
+        .status-section {
+            margin-bottom: 50px;
+        }
+
+        .status-section h2 {
+            font-size: 1.5em;
+            color: #0a74da;
+            border-left: 5px solid #0a74da;
+            padding-left: 10px;
+            margin-bottom: 16px;
+        }
+
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 18px;
+            width: 300px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            margin-bottom: 6px;
+            color: #0a74da;
+        }
+
+        .card p {
+            margin: 6px 0;
+        }
+
+        .avaliacao {
+            background-color: #f0f8ff;
+            border-left: 4px solid #0a74da;
+            padding: 10px;
+            margin-top: 12px;
+            border-radius: 6px;
+        }
+
+        .stars {
+            color: #f7b500;
+            font-size: 1.1em;
+            margin-bottom: 4px;
+        }
+
+        .comentario {
+            font-style: italic;
+            font-size: 0.95em;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Trabalhadores e Contratos da ONG</h1>
+
+<div id="pendentes" class="status-section">
+    <h2>Contratos Pendentes</h2>
+    <div class="cards-container" id="pendentesContainer"></div>
+</div>
+
+<div id="aceitas" class="status-section">
+    <h2>Contratos Aceitos</h2>
+    <div class="cards-container" id="aceitasContainer"></div>
+</div>
+
+<div id="recusadas" class="status-section">
+    <h2>Contratos Recusados</h2>
+    <div class="cards-container" id="recusadasContainer"></div>
+</div>
+
+<div id="finalizadas" class="status-section">
+    <h2>Contratos Finalizados (Com Avaliação)</h2>
+    <div class="cards-container" id="finalizadasContainer"></div>
+</div>
+
+<script>
+    const ongId = localStorage.getItem("ongId") || 1; // Use o ID real da ONG logada
+
+    function gerarEstrelas(nota) {
+        const cheia = '★';
+        const vazia = '☆';
+        return cheia.repeat(nota) + vazia.repeat(5 - nota);
+    }
+
+    async function carregarContratos() {
+        try {
+            const res = await fetch(`http://localhost:8080/api/candidaturas/por-ong/${ongId}`);
+            if (!res.ok) throw new Error("Erro ao buscar dados");
+
+            const dados = await res.json();
+
+            if (dados.length === 0) {
+                document.getElementById('pendentesContainer').innerHTML += "<p>Nenhum contrato encontrado.</p>";
+                return;
+            }
+
+            dados.forEach(c => {
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.innerHTML = `
+          <p><strong>Nome:</strong> ${c.nomeTrabalhador}</p>
+          <p><strong>Email:</strong> ${c.emailTrabalhador}</p>
+          <p><strong>Vaga:</strong> ${c.tituloVaga}</p>
+          <p><strong>Local:</strong> ${c.local}</p>
+          <p><strong>Status:</strong> ${c.status}</p>
+        `;
+
+                if (c.status === 'CONCLUIDA' && c.nota) {
+                    div.innerHTML += `
+            <div class="avaliacao">
+              <div class="stars">${gerarEstrelas(c.nota)}</div>
+              <div class="comentario">${c.comentario}</div>
+            </div>
+          `;
+                }
+
+                switch (c.status) {
+                    case 'PENDENTE':
+                        document.getElementById('pendentesContainer').appendChild(div);
+                        break;
+                    case 'ACEITA':
+                        document.getElementById('aceitasContainer').appendChild(div);
+                        break;
+                    case 'RECUSADA':
+                        document.getElementById('recusadasContainer').appendChild(div);
+                        break;
+                    case 'CONCLUIDA':
+                        document.getElementById('finalizadasContainer').appendChild(div);
+                        break;
+                }
+            });
+
+        } catch (err) {
+            alert("Erro ao carregar contratos: " + err.message);
+        }
+    }
+
+    carregarContratos();
+</script>
+
+</body>
+</html>

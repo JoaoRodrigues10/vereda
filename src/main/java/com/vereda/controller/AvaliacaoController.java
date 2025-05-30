@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/avaliacoes")
@@ -22,7 +22,7 @@ public class AvaliacaoController {
     private CandidaturaService candidaturaService;
 
     @GetMapping("/candidatura/{id}")
-    public List<Avaliacao> listarPorCandidatura(@PathVariable Long id) {
+    public Optional<Avaliacao> listarPorCandidatura(@PathVariable Long id) {
         return avaliacaoService.listarPorCandidatura(id); // CORRIGIDO AQUI
     }
 

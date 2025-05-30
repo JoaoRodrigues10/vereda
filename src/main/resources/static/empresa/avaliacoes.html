@@ -5,34 +5,128 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Avaliar Colaborador</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 700px; margin: 20px auto; padding: 10px; }
-        h1 { text-align: center; }
-        .cards-container { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 20px; }
-        .card {
-            border: 1px solid #ccc; border-radius: 6px; padding: 15px; width: 300px; cursor: pointer;
-            box-shadow: 2px 2px 5px #aaa; transition: box-shadow 0.2s ease;
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #f9f9f9;
         }
-        .card:hover, .card.selected {
+
+        h1 {
+            text-align: center;
+            color: #0a74da;
+        }
+
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            width: 300px;
+            cursor: pointer;
+            background-color: #fff;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .card:hover,
+        .card.selected {
             box-shadow: 2px 2px 12px #0a74da;
             border-color: #0a74da;
+            transform: scale(1.02);
         }
-        .card h3 { margin: 0 0 6px; }
-        .card p { margin: 4px 0; font-size: 0.9em; color: #555; }
+
+        .card h3 {
+            margin: 0 0 6px;
+        }
+
+        .card p {
+            margin: 4px 0;
+            font-size: 0.9em;
+            color: #555;
+        }
 
         form {
-            border: 1px solid #0a74da; border-radius: 6px; padding: 15px;
-            max-width: 400px; margin: 0 auto;
+            border: 2px solid #0a74da;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 450px;
+            margin: 0 auto;
+            background-color: #fff;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
         }
-        label, select, textarea, button {
-            display: block; width: 100%; margin-bottom: 12px;
+
+        form h2 {
+            text-align: center;
+            color: #0a74da;
+            margin-bottom: 20px;
         }
-        textarea { height: 80px; resize: vertical; }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        textarea {
+            width: 100%;
+            height: 80px;
+            resize: vertical;
+            padding: 8px;
+            font-size: 1em;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
         button {
-            background-color: #0a74da; color: white; border: none; padding: 10px;
-            font-weight: bold; cursor: pointer; border-radius: 4px;
+            background-color: #0a74da;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 100%;
+            font-size: 1em;
         }
-        button:hover { background-color: #095bb5; }
-        #message { margin-top: 10px; font-weight: bold; text-align: center; }
+
+        button:hover {
+            background-color: #095bb5;
+        }
+
+        #message {
+            margin-top: 12px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .star {
+            font-size: 30px;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .star.hover,
+        .star.selected {
+            color: #ffc107;
+        }
     </style>
 </head>
 <body>
@@ -46,14 +140,15 @@
 <form id="avaliacaoForm" style="display:none;">
     <h2>Avaliar Candidatura</h2>
     <input type="hidden" id="candidaturaId" />
-    <label for="nota">Nota (1 a 5):</label>
-    <select id="nota" required>
-        <option value="1">1 - Ruim</option>
-        <option value="2">2 - Regular</option>
-        <option value="3" selected>3 - Bom</option>
-        <option value="4">4 - Muito Bom</option>
-        <option value="5">5 - Excelente</option>
-    </select>
+
+    <label for="nota">Nota:</label>
+    <div class="star-rating" id="starRating">
+        <span class="star" data-value="1">&#9733;</span>
+        <span class="star" data-value="2">&#9733;</span>
+        <span class="star" data-value="3">&#9733;</span>
+        <span class="star" data-value="4">&#9733;</span>
+        <span class="star" data-value="5">&#9733;</span>
+    </div>
 
     <label for="comentario">Comentário:</label>
     <textarea id="comentario" placeholder="Comentários sobre o colaborador" required></textarea>
@@ -63,18 +158,42 @@
 </form>
 
 <script>
-    const empresaId = 1; // Mude para o ID real da empresa logada
+    const empresaId = 1; // Substitua com o ID real
 
     const cardsContainer = document.getElementById('cardsContainer');
     const form = document.getElementById('avaliacaoForm');
     const candidaturaIdInput = document.getElementById('candidaturaId');
-    const notaInput = document.getElementById('nota');
     const comentarioInput = document.getElementById('comentario');
     const messageDiv = document.getElementById('message');
+    const stars = document.querySelectorAll('.star');
 
     let selectedCard = null;
+    let selectedRating = 3;
 
-    // Busca candidaturas aprovadas para a empresa
+    // Marcação de estrelas
+    function updateStars(rating) {
+        stars.forEach(star => {
+            const val = parseInt(star.getAttribute('data-value'));
+            star.classList.toggle('selected', val <= rating);
+        });
+    }
+
+    stars.forEach(star => {
+        star.addEventListener('click', () => {
+            selectedRating = parseInt(star.getAttribute('data-value'));
+            updateStars(selectedRating);
+        });
+        star.addEventListener('mouseover', () => {
+            const val = parseInt(star.getAttribute('data-value'));
+            stars.forEach(s => {
+                s.classList.toggle('hover', parseInt(s.getAttribute('data-value')) <= val);
+            });
+        });
+        star.addEventListener('mouseout', () => {
+            stars.forEach(s => s.classList.remove('hover'));
+        });
+    });
+
     async function carregarCandidaturas() {
         try {
             const response = await fetch(`http://localhost:8080/api/candidaturas/finalizadas/${empresaId}`);
@@ -106,7 +225,6 @@
         }
     }
 
-    // Marca o card selecionado e abre o form com a candidaturaId preenchida
     function selecionarCard(card, candidaturaId) {
         if (selectedCard) {
             selectedCard.classList.remove('selected');
@@ -117,17 +235,17 @@
         candidaturaIdInput.value = candidaturaId;
         form.style.display = 'block';
         messageDiv.textContent = '';
-        notaInput.value = '3';
         comentarioInput.value = '';
+        selectedRating = 3;
+        updateStars(selectedRating);
     }
 
-    // Envia avaliação via POST
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const payload = {
             candidaturaId: parseInt(candidaturaIdInput.value),
-            nota: parseInt(notaInput.value),
+            nota: selectedRating,
             comentario: comentarioInput.value.trim()
         };
 
@@ -150,7 +268,6 @@
 
             messageDiv.style.color = 'green';
             messageDiv.textContent = 'Avaliação enviada com sucesso!';
-            notaInput.value = '3';
             comentarioInput.value = '';
             selectedCard.classList.remove('selected');
             form.style.display = 'none';
@@ -162,7 +279,6 @@
         }
     });
 
-    // Carrega as candidaturas ao abrir a página
     carregarCandidaturas();
 </script>
 

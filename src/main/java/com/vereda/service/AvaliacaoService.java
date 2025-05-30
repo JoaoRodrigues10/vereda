@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AvaliacaoService {
@@ -17,7 +18,8 @@ public class AvaliacaoService {
         return avaliacaoRepository.save(avaliacao);
     }
 
-    public List<Avaliacao> listarPorCandidatura(Long candidaturaId) {
+    public Optional<Avaliacao> listarPorCandidatura(Long candidaturaId) {
         return avaliacaoRepository.findByCandidatura_IdCandidatura(candidaturaId);
     }
+
 }

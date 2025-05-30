@@ -12,4 +12,5 @@ public interface CandidaturaRepository extends JpaRepository<Candidatura, Long> 
 
     List<Candidatura> findByVaga_Empresa_IdEmpresaAndStatus(Long idEmpresa, StatusCandidatura status);
 
+    List<Candidatura> findByTrabalhador_Ong_IdOng(Long idOng);
 }

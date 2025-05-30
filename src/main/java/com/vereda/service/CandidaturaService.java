@@ -3,6 +3,7 @@ package com.vereda.service;
 import com.vereda.controller.CandidaturaDto;
 import com.vereda.controller.Trabalhador.CandidaturaDetalhadaDto;
 import com.vereda.dto.AvaliacaoDto;
+import com.vereda.dto.TrabalhadorStatusDto;
 import com.vereda.model.Avaliacao;
 import com.vereda.model.Candidatura;
 import com.vereda.model.Trabalhador;
@@ -116,6 +117,27 @@ public class CandidaturaService {
                 c.getStatus()
         )).toList();
     }
+
+    public List<TrabalhadorStatusDto> listarPorOng(Long ongId) {
+        List<Candidatura> candidaturas = candidaturaRepository.findByTrabalhador_Ong_IdOng(ongId);
+
+        return candidaturas.stream().map(c -> {
+            Avaliacao avaliacao = avaliacaoRepository
+                    .findByCandidatura_IdCandidatura(c.getIdCandidatura())
+                    .orElse(null);
+            return new TrabalhadorStatusDto(
+                    c.getIdCandidatura(),
+                    c.getTrabalhador().getNome(),
+                    c.getTrabalhador().getEmail(),
+                    c.getVaga().getTitulo(),
+                    c.getVaga().getLocal(),
+                    c.getStatus(),
+                    avaliacao != null ? avaliacao.getNota() : null,
+                    avaliacao != null ? avaliacao.getComentario() : null
+            );
+        }).toList();
+    }
+
 
 
 

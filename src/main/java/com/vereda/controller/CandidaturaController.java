@@ -1,11 +1,13 @@
 package com.vereda.controller;
 
 import com.vereda.controller.Trabalhador.CandidaturaDetalhadaDto;
+import com.vereda.dto.TrabalhadorStatusDto;
 import com.vereda.model.Candidatura;
 import com.vereda.model.enums.StatusCandidatura;
 import com.vereda.service.CandidaturaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -63,6 +65,11 @@ public class CandidaturaController {
     @GetMapping("/finalizadas/{empresaId}")
     public List<CandidaturaDetalhadaDto> listarFinalizadasPorEmpresa(@PathVariable Long empresaId) {
         return candidaturaService.listarFinalizadasPorEmpresa(empresaId);
+    }
+
+    @GetMapping("/por-ong/{ongId}")
+    public ResponseEntity<List<TrabalhadorStatusDto>> listarPorOng(@PathVariable Long ongId) {
+        return ResponseEntity.ok(candidaturaService.listarPorOng(ongId));
     }
 
 }
