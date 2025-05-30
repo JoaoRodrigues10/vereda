@@ -50,15 +50,24 @@ public class TrabalhadorController {
         }
     }
 
-    @GetMapping("/count")
-    public ResponseEntity<Map<String, Long>> countTrabalhadores() {
-        long count = trabalhadorService.countTrabalhadores();
+    @GetMapping("/count/{idOng}")
+    public ResponseEntity<Map<String, Long>> countTrabalhadoresPorOng(@PathVariable Long idOng) {
+        long count = trabalhadorService.countTrabalhadoresPorOng(idOng);
         return ResponseEntity.ok(Map.of("count", count));
     }
+
 
     @GetMapping("/list")
     public ResponseEntity<List<Trabalhador>> listarTrabalhadores() {
         List<Trabalhador> trabalhadores = trabalhadorService.listarTrabalhadores(); // CORRETO - usando o service
         return ResponseEntity.ok(trabalhadores);
     }
+
+    @GetMapping("/porOng/{idOng}")
+    public ResponseEntity<List<Trabalhador>> listarPorOng(@PathVariable Long idOng) {
+        return ResponseEntity.ok(trabalhadorService.listarPorOngId(idOng));
+    }
+
+
+
 }

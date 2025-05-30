@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Vagas Disponíveis</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Opcional -->
+    <link rel="stylesheet" href="styles.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -30,6 +30,7 @@
             padding: 15px 20px;
             border-radius: 8px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
         }
 
         .vaga-card h2 {
@@ -50,6 +51,32 @@
             color: red;
             font-weight: bold;
         }
+
+        .modal {
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .close {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -58,12 +85,27 @@
     <!-- Vagas serão carregadas aqui via JS -->
 </div>
 
+<!-- Modal -->
+<div id="vagaModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitulo"></h2>
+        <p><strong>Local:</strong> <span id="modalLocal"></span></p>
+        <p><strong>Descrição:</strong> <span id="modalDescricao"></span></p>
+
+        <label for="trabalhadorSelect"><strong>Selecionar Trabalhador:</strong></label>
+        <select id="trabalhadorSelect">
+            <option value="">Carregando...</option>
+        </select>
+        <br><br>
+        <button id="confirmarBtn">Confirmar</button>
+    </div>
+</div>
+
 <script>
-    fetch("http://localhost:8080/vagas/disponiveis") // ajuste a URL se necessário
+    fetch("http://localhost:8080/vagas/disponiveis")
         .then(response => {
-            if (!response.ok) {
-                throw new Error("Erro ao buscar vagas disponíveis");
-            }
+            if (!response.ok) throw new Error("Erro ao buscar vagas disponíveis");
             return response.json();
         })
         .then(vagas => {
@@ -77,6 +119,11 @@
             vagas.forEach(vaga => {
                 const card = document.createElement("div");
                 card.className = "vaga-card";
+                card.dataset.idVaga = vaga.id;
+                card.dataset.titulo = vaga.titulo;
+                card.dataset.local = vaga.local;
+                card.dataset.descricao = vaga.descricao;
+                card.dataset.empresaId = vaga.empresaId;
 
                 card.innerHTML = `
                     <h2>${vaga.titulo}</h2>
@@ -88,15 +135,100 @@
                         </span>
                     </p>
                     <p><strong>Descrição:</strong> ${vaga.descricao}</p>
+                    <button class="abrir-modal-btn">Selecionar Trabalhador</button>
                 `;
 
+
+
+
                 container.appendChild(card);
+
+                card.querySelector(".abrir-modal-btn").addEventListener("click", () => {
+                    document.getElementById("modalTitulo").textContent = vaga.titulo;
+                    document.getElementById("modalLocal").textContent = vaga.local;
+                    document.getElementById("modalDescricao").textContent = vaga.descricao;
+
+
+                    const idOng = localStorage.getItem('ongId');
+                    carregarTrabalhadores(idOng);
+
+
+                    document.getElementById("vagaModal").style.display = "block";
+                    document.getElementById("confirmarBtn").dataset.idVaga = vaga.id;
+                });
+
             });
         })
         .catch(error => {
             document.getElementById("vaga-container").innerHTML = `
                 <p style="color:red;">${error.message}</p>`;
         });
+
+    function carregarTrabalhadores(idOng) {
+        const select = document.getElementById("trabalhadorSelect");
+        select.innerHTML = `<option value="">Carregando...</option>`;
+
+        fetch(`http://localhost:8080/ong/trabalhador/porOng/${idOng}`)
+            .then(res => res.json())
+            .then(trabalhadores => {
+                if (trabalhadores.length === 0) {
+                    select.innerHTML = `<option value="">Nenhum trabalhador encontrado</option>`;
+                    return;
+                }
+                select.innerHTML = trabalhadores.map(t =>
+                    `<option value="${t.idTrabalhador}">${t.nome}</option>`
+                ).join("");
+            })
+            .catch(() => {
+                select.innerHTML = `<option value="">Erro ao carregar</option>`;
+            });
+    }
+
+
+    document.querySelector(".close").addEventListener("click", () => {
+        document.getElementById("vagaModal").style.display = "none";
+    });
+
+    window.addEventListener("click", event => {
+        const modal = document.getElementById("vagaModal");
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+
+    document.getElementById("confirmarBtn").addEventListener("click", () => {
+        const idVaga = document.getElementById("confirmarBtn").dataset.idVaga;
+        const idTrabalhador = document.getElementById("trabalhadorSelect").value;
+
+        if (!idTrabalhador) {
+            alert("Por favor, selecione um trabalhador.");
+            return;
+        }
+
+        const payload = {
+            idVaga: parseInt(idVaga),
+            idTrabalhador: parseInt(idTrabalhador)
+        };
+
+        fetch("http://localhost:8080/vagas/associar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Erro ao associar trabalhador");
+                return res.text();
+            })
+            .then(msg => {
+                alert("Trabalhador associado com sucesso!");
+                document.getElementById("vagaModal").style.display = "none";
+            })
+            .catch(err => {
+                alert("Erro: " + err.message);
+            });
+    });
 </script>
 </body>
 </html>

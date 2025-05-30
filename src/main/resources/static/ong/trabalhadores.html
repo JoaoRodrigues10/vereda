@@ -132,7 +132,13 @@
         // Função para carregar os trabalhadores
         async function carregarTrabalhadores() {
             try {
-                const response = await fetch('/ong/trabalhador/list');
+                const idOng = localStorage.getItem('ongId');
+
+                if (!idOng) {
+                    throw new Error("ID da ONG não encontrado. Faça login novamente.");
+                }
+
+                const response = await fetch(`/ong/trabalhador/porOng/${idOng}`);
                 if (!response.ok) {
                     throw new Error('Erro ao carregar trabalhadores');
                 }
@@ -142,36 +148,37 @@
 
                 if (trabalhadores.length === 0) {
                     lista.innerHTML = `
-                        <div class="empty-state">
-                            <p>Nenhum trabalhador cadastrado ainda.</p>
-                            <a href="/ong/cadastro-trabalhador.html" class="btn-primary">Cadastrar primeiro trabalhador</a>
-                        </div>
-                    `;
+                <div class="empty-state">
+                    <p>Nenhum trabalhador cadastrado ainda.</p>
+                    <a href="/ong/cadastro-trabalhador.html" class="btn-primary">Cadastrar primeiro trabalhador</a>
+                </div>
+            `;
                     return;
                 }
 
                 lista.innerHTML = trabalhadores.map(trabalhador => `
-                    <div class="trabalhador-card">
-                        <h3 class="trabalhador-nome">${trabalhador.nome}</h3>
-                        <div class="trabalhador-info"><strong>CPF:</strong> ${trabalhador.cpf}</div>
-                        <div class="trabalhador-info"><strong>Email:</strong> ${trabalhador.email}</div>
-                        <div class="trabalhador-info"><strong>Telefone:</strong> ${trabalhador.telefone || 'Não informado'}</div>
-                        <div class="trabalhador-habilidades">
-                            <strong>Habilidades:</strong><br>
-                            ${trabalhador.habilidades ? trabalhador.habilidades.split(',').map(h => `<span class="habilidade-tag">${h.trim()}</span>`).join('') : 'Não informadas'}
-                        </div>
-                    </div>
-                `).join('');
+            <div class="trabalhador-card">
+                <h3 class="trabalhador-nome">${trabalhador.nome}</h3>
+                <div class="trabalhador-info"><strong>CPF:</strong> ${trabalhador.cpf}</div>
+                <div class="trabalhador-info"><strong>Email:</strong> ${trabalhador.email}</div>
+                <div class="trabalhador-info"><strong>Telefone:</strong> ${trabalhador.telefone || 'Não informado'}</div>
+                <div class="trabalhador-habilidades">
+                    <strong>Habilidades:</strong><br>
+                    ${trabalhador.habilidades ? trabalhador.habilidades.split(',').map(h => `<span class="habilidade-tag">${h.trim()}</span>`).join('') : 'Não informadas'}
+                </div>
+            </div>
+        `).join('');
 
             } catch (error) {
                 console.error('Erro:', error);
                 document.getElementById('trabalhadoresList').innerHTML = `
-                    <div class="empty-state">
-                        <p>Ocorreu um erro ao carregar os trabalhadores. Por favor, tente novamente.</p>
-                    </div>
-                `;
+            <div class="empty-state">
+                <p>Ocorreu um erro ao carregar os trabalhadores. Por favor, tente novamente.</p>
+            </div>
+        `;
             }
         }
+
 
         // Carregar trabalhadores quando a página é aberta
         carregarTrabalhadores();

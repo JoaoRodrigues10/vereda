@@ -30,7 +30,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Função para carregar a contagem de trabalhadores
     async function carregarContagemTrabalhadores() {
         try {
-            const response = await fetch('/ong/trabalhador/count');
+            const idOng = localStorage.getItem('ongId');
+            const response = await fetch(`/ong/trabalhador/count/${idOng}`);
+
             if (!response.ok) {
                 throw new Error('Erro ao carregar dados');
             }

@@ -68,4 +68,15 @@ public class TrabalhadorService {
     public List<Trabalhador> listarTrabalhadores() {
         return trabalhadorRepository.findAll();
     }
+
+
+    public List<Trabalhador> listarPorOngId(Long idOng) {
+        return trabalhadorRepository.findByOng_IdOng(idOng);
+    }
+
+
+    public long countTrabalhadoresPorOng(Long idOng) {
+        return trabalhadorRepository.countByOng_IdOng(idOng);
+    }
+
 }
