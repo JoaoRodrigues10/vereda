@@ -1,55 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Minhas Vagas</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Opcional -->
+    <link rel="stylesheet" href="/css/minhasVagas.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background-color: #f6f6f6;
-        }
 
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        .vaga-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .vaga-card {
-            background-color: #fff;
-            border-left: 6px solid #0a74da;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
-
-        .vaga-card h2 {
-            margin: 0 0 5px;
-        }
-
-        .vaga-card p {
-            margin: 5px 0;
-            color: #444;
-        }
-
-        .status-ativa {
-            color: green;
-            font-weight: bold;
-        }
-
-        .status-inativa {
-            color: red;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
@@ -58,46 +14,6 @@
     <!-- Vagas serão carregadas aqui via JS -->
 </div>
 
-<script>
-    const empresaId = localStorage.getItem("empresaId");
-
-    fetch(`http://localhost:8080/vagas/empresa/${empresaId}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Erro ao buscar vagas");
-            }
-            return response.json();
-        })
-        .then(vagas => {
-            const container = document.getElementById("vaga-container");
-
-            if (vagas.length === 0) {
-                container.innerHTML = "<p>Nenhuma vaga cadastrada.</p>";
-                return;
-            }
-
-            vagas.forEach(vaga => {
-                const card = document.createElement("div");
-                card.className = "vaga-card";
-
-                card.innerHTML = `
-                        <h2>${vaga.titulo}</h2>
-                        <p><strong>Local:</strong> ${vaga.local}</p>
-                        <p><strong>Status:</strong>
-                            <span class="${vaga.ativa ? 'status-ativa' : 'status-inativa'}">
-                                ${vaga.ativa ? 'Ativa' : 'Desativada'}
-                            </span>
-                        </p>
-                        <p><strong>Descrição:</strong> ${vaga.descricao}</p>
-                    `;
-
-                container.appendChild(card);
-            });
-        })
-        .catch(error => {
-            const container = document.getElementById("vaga-container");
-            container.innerHTML = `<p style="color:red;">${error.message}</p>`;
-        });
-</script>
+    <script src="/js/minhasVagas.js"></script>
 </body>
 </html>

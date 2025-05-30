@@ -4,5 +4,5 @@ public enum StatusCandidatura {
     PENDENTE,
     ACEITA,
     RECUSADA,
-    CANCELADA
+    FINALIZADA
 }
