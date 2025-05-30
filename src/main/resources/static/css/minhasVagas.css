@@ -1,0 +1,112 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 20px;
+    background-color: #f0f2f5;
+}
+
+h1 {
+    text-align: center;
+    color: #222;
+    margin-bottom: 30px;
+}
+
+.vaga-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.vaga-card {
+    background-color: #fff;
+    border-left: 8px solid #0a74da;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.vaga-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.vaga-card h2 {
+    margin: 0 0 10px;
+    font-size: 1.5em;
+    color: #0a74da;
+}
+
+.vaga-card p {
+    margin: 6px 0;
+    color: #444;
+    font-size: 1em;
+}
+
+.status-ativa {
+    color: green;
+    font-weight: bold;
+}
+
+.status-inativa {
+    color: red;
+    font-weight: bold;
+}
+
+button {
+    margin-top: 10px;
+    padding: 8px 15px;
+    background-color: #0a74da;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #005bb5;
+}
+
+.candidatos-container {
+    margin-top: 15px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    background-color: #fafafa;
+    border-radius: 8px;
+}
+
+.candidato-card {
+    border: 1px solid #ccc;
+    margin: 6px 0;
+    padding: 10px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+}
+
+.btn-aprovar {
+    background-color: #28a745;
+}
+
+.btn-recusar {
+    background-color: #dc3545;
+}
+
+.btn-aprovar:hover {
+    background-color: #218838;
+}
+
+.btn-recusar:hover {
+    background-color: #c82333;
+}
+
+.candidato-card button {
+    padding: 5px 10px;
+    margin-left: 5px;
+    border-radius: 4px;
+}
