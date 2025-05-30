@@ -181,12 +181,16 @@
 
         async function carregarTrabalhadores() {
             try {
-                const response = await fetch("http://localhost:8080/ong/trabalhador/list");
+                const idOng = localStorage.getItem("ongId");
+                if (!idOng) throw new Error("ID da ONG não encontrado. Faça login novamente.");
+
+                const response = await fetch(`http://localhost:8080/ong/trabalhador/porOng/${idOng}`);
                 if (!response.ok) throw new Error('Erro ao buscar trabalhadores');
+
                 const trabalhadores = await response.json();
 
                 if (trabalhadores.length === 0) {
-                    lista.innerHTML = `<div class="empty-state">Nenhum trabalhador cadastrado.</div>`;
+                    lista.innerHTML = `<div class="empty-state">Nenhum trabalhador cadastrado para esta ONG.</div>`;
                     return;
                 }
 
@@ -195,14 +199,14 @@
                     const card = document.createElement('div');
                     card.className = 'trabalhador-card';
                     card.innerHTML = `
-            <div class="trabalhador-nome">${trabalhador.nome}</div>
-            <div class="trabalhador-info"><strong>CPF:</strong> ${trabalhador.cpf}</div>
-            <div class="trabalhador-info"><strong>Email:</strong> ${trabalhador.email || 'Não informado'}</div>
-            <div class="trabalhador-habilidades">
-              <strong>Habilidades:</strong><br>
-              ${trabalhador.habilidades ? trabalhador.habilidades.split(',').map(h => `<span class="habilidade-tag">${h.trim()}</span>`).join('') : 'Não informadas'}
-            </div>
-          `;
+                <div class="trabalhador-nome">${trabalhador.nome}</div>
+                <div class="trabalhador-info"><strong>CPF:</strong> ${trabalhador.cpf}</div>
+                <div class="trabalhador-info"><strong>Email:</strong> ${trabalhador.email || 'Não informado'}</div>
+                <div class="trabalhador-habilidades">
+                    <strong>Habilidades:</strong><br>
+                    ${trabalhador.habilidades ? trabalhador.habilidades.split(',').map(h => `<span class="habilidade-tag">${h.trim()}</span>`).join('') : 'Não informadas'}
+                </div>
+            `;
                     card.onclick = () => abrirModalComVagas(trabalhador.idTrabalhador);
                     lista.appendChild(card);
                 });
@@ -212,6 +216,7 @@
                 lista.innerHTML = `<div class="empty-state">Erro ao carregar trabalhadores.</div>`;
             }
         }
+
 
         async function abrirModalComVagas(trabalhadorId) {
             modal.style.display = 'flex';
