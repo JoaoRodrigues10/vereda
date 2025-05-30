@@ -6,6 +6,7 @@ import com.vereda.model.Empresa;
 import com.vereda.model.Trabalhador;
 import com.vereda.repository.OngRepository;
 import com.vereda.repository.TrabalhadorRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -77,6 +78,27 @@ public class TrabalhadorService {
 
     public long countTrabalhadoresPorOng(Long idOng) {
         return trabalhadorRepository.countByOng_IdOng(idOng);
+    }
+
+    public Trabalhador atualizarTrabalhador(Long id, Trabalhador novo) {
+        Trabalhador existente = trabalhadorRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Trabalhador não encontrado"));
+
+        existente.setNome(novo.getNome());
+        existente.setEmail(novo.getEmail());
+        existente.setHabilidades(novo.getHabilidades());
+        existente.setEndereco(novo.getEndereco());
+        existente.setDataNascimento(novo.getDataNascimento());
+
+        // Atualiza a data de atualização para o momento atual
+        existente.setUpdateTimestamp(Instant.now());
+
+        return trabalhadorRepository.save(existente);
+    }
+
+    public Trabalhador buscarPorId(Long id) {
+        return trabalhadorRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Trabalhador não encontrado"));
     }
 
 }

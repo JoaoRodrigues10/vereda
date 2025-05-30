@@ -129,6 +129,13 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        function formatarDataBrasileira(dataIso) {
+            if (!dataIso) return 'Não informado';
+            const data = new Date(dataIso);
+            if (isNaN(data)) return 'Data inválida';
+            return data.toLocaleDateString('pt-BR');
+        }
+
         // Função para carregar os trabalhadores
         async function carregarTrabalhadores() {
             try {
@@ -158,10 +165,14 @@
 
                 lista.innerHTML = trabalhadores.map(trabalhador => `
             <div class="trabalhador-card">
-                <h3 class="trabalhador-nome">${trabalhador.nome}</h3>
+                <h3 class="trabalhador-nome">
+                  ${trabalhador.nome}
+                  <button onclick="editarTrabalhador(${trabalhador.idTrabalhador})" style="float: right; font-size: 0.8rem;">✎ Editar</button>
+                </h3>
+
                 <div class="trabalhador-info"><strong>CPF:</strong> ${trabalhador.cpf}</div>
                 <div class="trabalhador-info"><strong>Email:</strong> ${trabalhador.email}</div>
-                <div class="trabalhador-info"><strong>Telefone:</strong> ${trabalhador.telefone || 'Não informado'}</div>
+                <div class="trabalhador-info"><strong>Data de Nascimento:</strong> ${formatarDataBrasileira(trabalhador.dataNascimento)}</div>
                 <div class="trabalhador-habilidades">
                     <strong>Habilidades:</strong><br>
                     ${trabalhador.habilidades ? trabalhador.habilidades.split(',').map(h => `<span class="habilidade-tag">${h.trim()}</span>`).join('') : 'Não informadas'}
@@ -197,7 +208,107 @@
                 }
             });
         });
+
+
+        document.getElementById('formEditarTrabalhador').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const id = document.getElementById('editarId').value;
+            const dadosAtualizados = {
+                nome: document.getElementById('editarNome').value,
+                dataNascimento: document.getElementById('editarDataNascimento').value,
+                endereco: document.getElementById('editarEndereco').value,
+                telefone: document.getElementById('editarTelefone').value,
+                email: document.getElementById('editarEmail').value,
+                habilidades: document.getElementById('editarHabilidades').value
+            };
+
+
+            try {
+                const res = await fetch(`/ong/trabalhador/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dadosAtualizados)
+                });
+
+                if (!res.ok) throw new Error('Falha ao atualizar trabalhador');
+                // Exibe mensagem de sucesso
+                document.getElementById('mensagemSucesso').style.display = 'block';
+                setTimeout(() => {
+                    fecharModal();
+                    carregarTrabalhadores();
+                    document.getElementById('mensagemSucesso').style.display = 'none';
+                }, 1500);
+            } catch (err) {
+                alert('Erro ao salvar alterações');
+                console.error(err);
+            }
+        });
+
+
     });
+
+    function editarTrabalhador(id) {
+        fetch(`/ong/trabalhador/${id}`)
+            .then(res => res.json())
+            .then(trab => {
+                document.getElementById('editarId').value = trab.idTrabalhador;
+                document.getElementById('editarNome').value = trab.nome;
+                document.getElementById('editarEmail').value = trab.email;
+                document.getElementById('editarHabilidades').value = trab.habilidades || '';
+                document.getElementById('modalEditar').style.display = 'flex';
+                document.getElementById('editarEndereco').value = trab.endereco || '';
+                document.getElementById('editarDataNascimento').value = trab.dataNascimento;
+                document.getElementById('editarEndereco').value = trab.endereco;
+
+
+            })
+            .catch(err => alert("Erro ao carregar dados do trabalhador"));
+    }
+
+    function fecharModal() {
+        document.getElementById('modalEditar').style.display = 'none';
+    }
+
+
+
 </script>
+
+<!-- Modal de Edição -->
+<div id="modalEditar" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:999;">
+    <div style="background:#fff; padding:2rem; border-radius:8px; width:400px; position:relative;">
+        <h2>Editar Trabalhador</h2>
+        <div id="mensagemSucesso" style="display:none; background:#d4edda; color:#155724; padding:10px; margin-bottom:10px; border-radius:5px;">
+            Alterações salvas com sucesso!
+        </div>
+
+        <form id="formEditarTrabalhador">
+            <input type="hidden" id="editarId" />
+
+            <label>Nome:</label>
+            <input type="text" id="editarNome" required style="width:100%; margin-bottom:10px;">
+
+            <label>Data de Nascimento:</label>
+            <input type="date" id="editarDataNascimento" required style="width:100%; margin-bottom:10px;">
+
+            <label>Endereço:</label>
+            <input type="text" id="editarEndereco" required style="width:100%; margin-bottom:10px;">
+
+            <label>Email de Contato:</label>
+            <input type="email" id="editarEmail" required style="width:100%; margin-bottom:10px;">
+
+            <label>Habilidades (separadas por vírgula):</label>
+            <input type="text" id="editarHabilidades" style="width:100%; margin-bottom:15px;">
+
+            <button type="submit" class="btn-primary" style="width:100%;">Salvar Alterações</button>
+        </form>
+
+        <button onclick="fecharModal()" style="position:absolute; top:10px; right:10px; background:none; border:none; font-size:1.2rem;">×</button>
+    </div>
+</div>
+
+
+
 </body>
 </html>

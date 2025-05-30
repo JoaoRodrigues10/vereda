@@ -68,6 +68,18 @@ public class TrabalhadorController {
         return ResponseEntity.ok(trabalhadorService.listarPorOngId(idOng));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Trabalhador> atualizarTrabalhador(@PathVariable Long id, @RequestBody Trabalhador trabalhadorAtualizado) {
+        Trabalhador atualizado = trabalhadorService.atualizarTrabalhador(id, trabalhadorAtualizado);
+        return ResponseEntity.ok(atualizado);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Trabalhador> buscarPorId(@PathVariable Long id) {
+        Trabalhador trabalhador = trabalhadorService.buscarPorId(id);
+        return ResponseEntity.ok(trabalhador);
+    }
+
 
 
 }
