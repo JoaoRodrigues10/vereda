@@ -11,5 +11,5 @@ public interface VagaRepository extends JpaRepository<Vaga, Long> {
     List<Vaga> findByOng_IdOng(Long idOng);
 
 
-
+    List<Vaga> findByEmpresa_IdEmpresa(Long empresaId);
 }

@@ -60,11 +60,15 @@ public class MatchService {
     public Set<String> extrairHabilidades(String texto) {
         if (texto == null || texto.isBlank()) return Set.of();
 
-        return Arrays.stream(texto.toLowerCase().split("[,;\\n\\r]+"))
+        return Arrays.stream(texto.toLowerCase()
+                        .replaceAll("[:\\-]", " ") // remove dois-pontos e hífens
+                        .split("[,;\\.\\n\\r\\s]+")) // quebra por vírgula, ponto, espaço, quebra de linha
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
                 .collect(Collectors.toSet());
     }
+
+
 
 }
 

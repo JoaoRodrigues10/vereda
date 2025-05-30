@@ -45,4 +45,11 @@ public class VagaController {
     public ResponseEntity<Vaga> desativar(@PathVariable Long id) {
         return ResponseEntity.ok(vagaService.desativarVaga(id));
     }
+
+    @GetMapping("/empresa/{empresaId}")
+    public ResponseEntity<List<Vaga>> listarVagasPorEmpresa(@PathVariable Long empresaId) {
+        return ResponseEntity.ok(vagaService.listarVagasPorEmpresa(empresaId));
+    }
+
+
 }

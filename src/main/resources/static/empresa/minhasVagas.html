@@ -59,7 +59,9 @@
 </div>
 
 <script>
-    fetch("http://localhost:8080/vagas")
+    const empresaId = localStorage.getItem("empresaId");
+
+    fetch(`http://localhost:8080/vagas/empresa/${empresaId}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error("Erro ao buscar vagas");

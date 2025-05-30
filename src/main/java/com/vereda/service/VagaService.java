@@ -60,4 +60,8 @@ public class VagaService {
         return vagaRepository.save(vaga);
     }
 
+    public List<Vaga> listarVagasPorEmpresa(Long empresaId) {
+        return vagaRepository.findByEmpresa_IdEmpresa(empresaId);
+    }
+
 }
