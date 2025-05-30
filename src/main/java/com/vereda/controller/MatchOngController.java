@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/ongs/match") // indica que é para as ONGs
@@ -42,5 +43,16 @@ public class MatchOngController {
         return matchService.encontrarMatchesParaTrabalhador(trabalhador, todasVagas);
     }
 
+    @GetMapping("/count/{ongId}")
+    public Map<String, Integer> contarMatchesParaOng(@PathVariable Long ongId) {
+        List<Vaga> vagasDaOng = vagaRepository.findByOng_IdOng(ongId); // supondo que você tenha esse método
+        int totalMatches = 0;
+
+        for (Vaga vaga : vagasDaOng) {
+            totalMatches += matchService.encontrarMatchesParaVaga(vaga).size();
+        }
+
+        return Map.of("count", totalMatches);
+    }
 }
 

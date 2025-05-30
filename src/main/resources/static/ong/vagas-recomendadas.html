@@ -1,120 +1,258 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Vagas Recomendadas</title>
+    <title>Vereda - Trabalhadores</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
+            font-family: 'Inter', sans-serif;
+            background: #f9f9f9;
             margin: 0;
             padding: 0;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 40px auto;
             padding: 20px;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        h1 {
-            text-align: center;
+        .trabalhadores-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .search-bar {
+            padding: 0.8rem 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 300px;
+            font-size: 1rem;
+        }
+
+        .trabalhadores-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .trabalhador-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+        .trabalhador-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .trabalhador-nome {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
             color: #333;
         }
 
-        #vagas-lista {
-            margin-top: 20px;
+        .trabalhador-info {
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .trabalhador-habilidades {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .habilidade-tag {
+            display: inline-block;
+            background: #e0f7fa;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 0 0.4rem 0.4rem 0;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #888;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px; right: 15px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-close:hover {
+            color: #333;
         }
 
         .vaga {
-            background: #e9f7ef;
-            border-left: 5px solid #2ecc71;
+            background: #f1f8e9;
+            border-left: 5px solid #8bc34a;
             padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
+            margin: 15px 0;
+            border-radius: 6px;
         }
 
         .vaga h3 {
             margin: 0;
-            color: #27ae60;
+            font-size: 1.1rem;
+            color: #558b2f;
         }
 
         .vaga p {
             margin: 5px 0;
-        }
-
-        input[type="number"] {
-            padding: 10px;
-            width: 200px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
-
-        button {
-            padding: 10px 15px;
-            margin-left: 10px;
-            background: #27ae60;
-            border: none;
-            color: #fff;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #219150;
+            font-size: 0.95rem;
         }
     </style>
 </head>
 <body>
+
 <div class="container">
-    <h1>Vagas Recomendadas</h1>
-    <div>
-        <input type="number" id="trabalhadorId" placeholder="ID do Trabalhador" />
-        <button onclick="buscarVagas()">Buscar</button>
+    <div class="trabalhadores-header">
+        <h1>Trabalhadores Cadastrados</h1>
+        <input type="text" class="search-bar" placeholder="Buscar trabalhadores...">
     </div>
-    <div id="vagas-lista"></div>
+
+    <div class="trabalhadores-list" id="trabalhadoresList">
+        <div class="empty-state">Carregando trabalhadores...</div>
+    </div>
+</div>
+
+<!-- Modal de Vagas -->
+<div class="modal-overlay" id="modal">
+    <div class="modal-content">
+        <span class="modal-close" id="fecharModal">&times;</span>
+        <h2>Vagas Recomendadas</h2>
+        <div id="vagasModalContent">
+            <p>Carregando...</p>
+        </div>
+    </div>
 </div>
 
 <script>
-    async function buscarVagas() {
-        const trabalhadorId = document.getElementById("trabalhadorId").value;
-        const lista = document.getElementById("vagas-lista");
-        lista.innerHTML = "";
+    document.addEventListener('DOMContentLoaded', async function () {
+        const lista = document.getElementById('trabalhadoresList');
+        const vagasModal = document.getElementById('vagasModalContent');
+        const modal = document.getElementById('modal');
+        const fecharModal = document.getElementById('fecharModal');
 
-        if (!trabalhadorId) {
-            alert("Digite o ID do trabalhador.");
-            return;
+        fecharModal.addEventListener('click', () => modal.style.display = 'none');
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) modal.style.display = 'none';
+        });
+
+        async function carregarTrabalhadores() {
+            try {
+                const response = await fetch("http://localhost:8080/ong/trabalhador/list");
+                if (!response.ok) throw new Error('Erro ao buscar trabalhadores');
+                const trabalhadores = await response.json();
+
+                if (trabalhadores.length === 0) {
+                    lista.innerHTML = `<div class="empty-state">Nenhum trabalhador cadastrado.</div>`;
+                    return;
+                }
+
+                lista.innerHTML = "";
+                trabalhadores.forEach(trabalhador => {
+                    const card = document.createElement('div');
+                    card.className = 'trabalhador-card';
+                    card.innerHTML = `
+            <div class="trabalhador-nome">${trabalhador.nome}</div>
+            <div class="trabalhador-info"><strong>CPF:</strong> ${trabalhador.cpf}</div>
+            <div class="trabalhador-info"><strong>Email:</strong> ${trabalhador.email || 'Não informado'}</div>
+            <div class="trabalhador-habilidades">
+              <strong>Habilidades:</strong><br>
+              ${trabalhador.habilidades ? trabalhador.habilidades.split(',').map(h => `<span class="habilidade-tag">${h.trim()}</span>`).join('') : 'Não informadas'}
+            </div>
+          `;
+                    card.onclick = () => abrirModalComVagas(trabalhador.idTrabalhador);
+                    lista.appendChild(card);
+                });
+
+            } catch (err) {
+                console.error(err);
+                lista.innerHTML = `<div class="empty-state">Erro ao carregar trabalhadores.</div>`;
+            }
         }
 
-        try {
-            const response = await fetch(`http://localhost:8080/ongs/match/trabalhador/${trabalhadorId}`);
-            if (!response.ok) throw new Error("Erro ao buscar as vagas.");
+        async function abrirModalComVagas(trabalhadorId) {
+            modal.style.display = 'flex';
+            vagasModal.innerHTML = '<p>Carregando vagas...</p>';
+            try {
+                const response = await fetch(`http://localhost:8080/ongs/match/trabalhador/${trabalhadorId}`);
+                if (!response.ok) throw new Error('Erro ao buscar vagas');
 
-            const vagas = await response.json();
+                const vagas = await response.json();
+                if (vagas.length === 0) {
+                    vagasModal.innerHTML = "<p>Nenhuma vaga recomendada encontrada.</p>";
+                    return;
+                }
 
-            if (vagas.length === 0) {
-                lista.innerHTML = "<p>Nenhuma vaga recomendada encontrada.</p>";
-                return;
-            }
-
-            vagas.forEach(vaga => {
-                const div = document.createElement("div");
-                div.className = "vaga";
-                div.innerHTML = `
-            <h3>Vaga #${vaga.idVaga || "?"}</h3>
+                vagasModal.innerHTML = "";
+                vagas.forEach(vaga => {
+                    const vagaEl = document.createElement('div');
+                    vagaEl.className = 'vaga';
+                    vagaEl.innerHTML = `
+            <h3>${vaga.titulo || 'Vaga sem título'} (ID: ${vaga.idVaga})</h3>
             <p><strong>Descrição:</strong> ${vaga.descricao}</p>
             <p><strong>Local:</strong> ${vaga.local}</p>
           `;
-                lista.appendChild(div);
-            });
-        } catch (error) {
-            lista.innerHTML = `<p style="color:red;">Erro: ${error.message}</p>`;
+                    vagasModal.appendChild(vagaEl);
+                });
+            } catch (err) {
+                vagasModal.innerHTML = `<p style="color:red;">Erro ao buscar vagas.</p>`;
+            }
         }
-    }
+
+        document.querySelector('.search-bar').addEventListener('input', function (e) {
+            const termo = e.target.value.toLowerCase();
+            document.querySelectorAll('.trabalhador-card').forEach(card => {
+                const texto = card.textContent.toLowerCase();
+                card.style.display = texto.includes(termo) ? 'block' : 'none';
+            });
+        });
+
+        carregarTrabalhadores();
+    });
 </script>
+
 </body>
 </html>

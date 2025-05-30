@@ -37,6 +37,9 @@ public class Vaga {
     @JoinColumn(name = "empresa_id")
     private Empresa empresa;
 
+    @ManyToOne
+    @JoinColumn(name = "ong_id")
+    private Ong ong;
 
     public Vaga() {
 

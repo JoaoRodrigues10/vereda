@@ -44,6 +44,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    async function carregarContagemMatches() {
+        try {
+            const idOng = localStorage.getItem('ongId');
+            const response = await fetch(`/ong/match/count/${idOng}`);
+
+            if (!response.ok) {
+                throw new Error('Erro ao carregar dados');
+            }
+
+            const data = await response.json();
+            document.getElementById('contadorMatches').textContent = data.count;
+        } catch (error) {
+            console.error('Erro:', error);
+            document.getElementById('contadorMatches').textContent = 'Erro ao carregar';
+        }
+    }
+    carregarContagemMatches();
+    setInterval(carregarContagemMatches, 30000); // Atualiza a cada 30s se quiser
+
     // Carrega os dados quando a página é aberta
     carregarContagemTrabalhadores();
 

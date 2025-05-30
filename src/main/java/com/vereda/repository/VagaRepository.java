@@ -7,4 +7,9 @@ import java.util.List;
 
 public interface VagaRepository extends JpaRepository<Vaga, Long> {
     List<Vaga> findByAtivaTrue();
+
+    List<Vaga> findByOng_IdOng(Long idOng);
+
+
+
 }
