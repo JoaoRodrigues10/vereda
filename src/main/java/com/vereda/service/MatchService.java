@@ -5,10 +5,7 @@ import com.vereda.model.Vaga;
 import com.vereda.repository.TrabalhadorRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,31 +37,33 @@ public class MatchService {
         System.out.println("Trabalhador endereço: " + trabalhador.getEndereco());
         System.out.println("Comparando com " + todasVagas.size() + " vagas...");
 
+        System.out.println("Trabalhador habilidades: " + habilidadesTrabalhador);
+        System.out.println("Total de vagas: " + todasVagas.size());
+
         return todasVagas.stream()
+                .peek(v -> {
+                    System.out.println("\nVaga: " + v.getTitulo() + " - Local: " + v.getLocal());
+                    System.out.println("Descrição: " + v.getDescricao());
+                    System.out.println("Habilidades extraídas da vaga: " + extrairHabilidades(v.getDescricao()));
+                })
                 .filter(v -> v.getLocal().equalsIgnoreCase(trabalhador.getEndereco()))
                 .filter(v -> {
                     Set<String> habilidadesVaga = extrairHabilidades(v.getDescricao());
-                    return !Collections.disjoint(habilidadesTrabalhador, habilidadesVaga);
+                    boolean match = !Collections.disjoint(habilidadesTrabalhador, habilidadesVaga);
+                    System.out.println("Match de habilidade com trabalhador? " + match);
+                    return match;
                 })
-
                 .collect(Collectors.toList());
-
 
     }
 
-    public Set<String> extrairHabilidades(String descricao) {
-        Set<String> habilidadesEncontradas = new HashSet<>();
-        List<String> habilidadesConhecidas = List.of("pintura", "soldagem", "carpintaria", "limpeza", "cozinha", "reposição"); // todas em minúsculo
+    public Set<String> extrairHabilidades(String texto) {
+        if (texto == null || texto.isBlank()) return Set.of();
 
-        String descricaoMinuscula = descricao.toLowerCase();
-
-        for (String habilidade : habilidadesConhecidas) {
-            if (descricaoMinuscula.contains(habilidade)) {
-                habilidadesEncontradas.add(habilidade);
-            }
-        }
-
-        return habilidadesEncontradas;
+        return Arrays.stream(texto.toLowerCase().split("[,;\\n\\r]+"))
+                .map(String::trim)
+                .filter(s -> !s.isBlank())
+                .collect(Collectors.toSet());
     }
 
 }
