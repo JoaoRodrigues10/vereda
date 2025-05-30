@@ -9,7 +9,30 @@
     </style>
 </head>
 <body>
+<!-- Botão Voltar com estilo embutido -->
+<div class="container" style="max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem;">
+    <button
+            onclick="window.history.back()"
+            style="
+            background-color: #3B82F6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease;"
+            onmouseover="this.style.backgroundColor='#2563eb'; this.style.transform='translateY(-2px)'"
+            onmouseout="this.style.backgroundColor='#3B82F6'; this.style.transform='none'"
+    >
+        ← Voltar
+    </button>
+</div>
+
 <h1>Minhas Vagas</h1>
+
 <div class="vaga-container" id="vaga-container">
     <!-- Vagas serão carregadas aqui via JS -->
 </div>

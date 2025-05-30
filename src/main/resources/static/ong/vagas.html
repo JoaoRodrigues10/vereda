@@ -3,47 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <title>Vagas Disponíveis</title>
-    <link rel="stylesheet" href="styles.css">
     <style>
+        :root {
+            --primary: #10B981;         /* Verde substituindo o azul */
+            --primary-hover: #059669;   /* Verde escuro para hover */
+            --secondary: #10B981;
+            --light: #F9FAFB;
+            --dark: #1F2937;
+            --gray: #6B7280;
+            --white: #FFFFFF;
+            --shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            --font: 'Inter', sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background-color: #f6f6f6;
+            font-family: var(--font), sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            padding: 2rem;
+            margin: 0;
         }
 
         h1 {
             text-align: center;
-            color: #333;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--primary);
         }
 
         .vaga-container {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            max-width: 800px;
+            gap: 1rem;
+            max-width: 900px;
             margin: 0 auto;
         }
 
         .vaga-card {
-            background-color: #fff;
-            border-left: 6px solid #0a74da;
-            padding: 15px 20px;
+            background-color: var(--white);
+            border-left: 5px solid var(--primary);
+            padding: 1.25rem 1.5rem;
             border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease;
+        }
+
+        .vaga-card:hover {
+            transform: translateY(-4px);
         }
 
         .vaga-card h2 {
-            margin: 0 0 5px;
+            margin: 0 0 0.5rem;
+            font-size: 1.3rem;
+            color: var(--dark);
         }
 
         .vaga-card p {
-            margin: 5px 0;
-            color: #444;
+            margin: 0.3rem 0;
+            color: var(--gray);
+            font-size: 0.95rem;
         }
 
         .status-ativa {
-            color: green;
+            color: var(--primary);
             font-weight: bold;
         }
 
@@ -52,41 +74,139 @@
             font-weight: bold;
         }
 
+        .abrir-modal-btn {
+            margin-top: 1rem;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .abrir-modal-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
         .modal {
             position: fixed;
-            z-index: 10;
-            left: 0;
+            z-index: 999;
             top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.6);
         }
 
         .modal-content {
             background-color: #fff;
-            margin: 10% auto;
-            padding: 20px;
+            padding: 2rem;
             border-radius: 8px;
-            width: 80%;
+            width: 90%;
             max-width: 500px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
 
         .close {
-            float: right;
+            position: absolute;
+            top: 12px;
+            right: 16px;
             font-size: 24px;
+            font-weight: bold;
             cursor: pointer;
+            color: var(--gray);
+        }
+
+        .close:hover {
+            color: var(--dark);
+        }
+
+        select, button {
+            font-size: 1rem;
+            padding: 0.5rem;
+            width: 100%;
+            margin-top: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        #confirmarBtn {
+            margin-top: 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        #confirmarBtn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        label {
+            margin-top: 1rem;
+            display: block;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .voltar-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .voltar-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
         }
     </style>
+
 </head>
 <body>
+<div class="container" style="margin-top: 2rem; max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem;">
+    <button
+            onclick="window.history.back()"
+            style="
+            background-color: #10B981;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease;"
+            onmouseover="this.style.backgroundColor='#059669'; this.style.transform='translateY(-2px)'"
+            onmouseout="this.style.backgroundColor='#10B981'; this.style.transform='none'"
+    >
+        ← Voltar
+    </button>
+</div>
+
 <h1>Vagas Disponíveis</h1>
 <div class="vaga-container" id="vaga-container">
     <!-- Vagas serão carregadas aqui via JS -->
 </div>
 
 <!-- Modal -->
-<div id="vagaModal" class="modal" style="display:none;">
+<div id="vagaModal" class="modal hidden">
     <div class="modal-content">
         <span class="close">&times;</span>
         <h2 id="modalTitulo"></h2>
@@ -153,7 +273,7 @@
                     carregarTrabalhadores(idOng, vaga.id);
 
 
-                    document.getElementById("vagaModal").style.display = "block";
+                    document.getElementById("vagaModal").classList.remove("hidden");
                     document.getElementById("confirmarBtn").dataset.idVaga = vaga.id;
                 });
 
@@ -197,14 +317,25 @@
 
 
     document.querySelector(".close").addEventListener("click", () => {
-        document.getElementById("vagaModal").style.display = "none";
+        document.getElementById("vagaModal").classList.add("hidden");
+        resetarModal();
     });
+    function resetarModal() {
+        document.getElementById("modalTitulo").textContent = "";
+        document.getElementById("modalLocal").textContent = "";
+        document.getElementById("modalDescricao").textContent = "";
+        document.getElementById("trabalhadorSelect").innerHTML = "<option value=''>Carregando...</option>";
+        document.getElementById("confirmarBtn").dataset.idVaga = "";
+    }
+
 
     window.addEventListener("click", event => {
         const modal = document.getElementById("vagaModal");
         if (event.target === modal) {
-            modal.style.display = "none";
+            modal.classList.add("hidden");
+            resetarModal();
         }
+
     });
 
     document.getElementById("confirmarBtn").addEventListener("click", () => {
@@ -235,9 +366,11 @@
             })
             .then(data => {
                 alert("Trabalhador associado à vaga com sucesso!");
-                document.getElementById("vagaModal").style.display = "none";
+                const modal = document.getElementById("vagaModal");
+                modal.classList.add("hidden");
+                resetarModal(); // limpa os dados para a próxima vez
             })
-            .catch(err => {
+                .catch(err => {
                 alert("Erro: " + err.message);
             });
     });

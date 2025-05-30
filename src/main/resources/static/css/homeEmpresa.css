@@ -4,13 +4,15 @@
     --light: #F9FAFB;
     --dark: #1F2937;
     --gray: #6B7280;
+    --white: #FFFFFF;
+    --font: 'Inter', sans-serif;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font);
 }
 
 .container {
@@ -25,6 +27,7 @@
     color: white;
     padding: 3rem 1.5rem;
     text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .home-header h1 {
@@ -37,54 +40,134 @@
     opacity: 0.9;
 }
 
-/* Navegação Pós-Login */
+/* Navbar Sticky */
+.navbar {
+    background-color: var(--primary);
+    padding: 12px 0;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 999;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.navbar-logo a {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    text-decoration: none;
+}
+
+.navbar-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-links li a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.navbar-links li a:hover {
+    color: #D1E9FF;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+/* Seção de Navegação Pós-Login */
 .navegacao {
-    background: white;
-    padding: 2rem 0;
+    background: var(--light);
+    padding: 3rem 0;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    color: var(--dark);
+    margin-bottom: 1.5rem;
+    text-align: center;
 }
 
 .navegacao-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
     padding: 0 1.5rem;
 }
 
 .navegacao-card {
-    background: var(--light);
+    background: var(--white);
     border-radius: 10px;
     padding: 1.5rem;
     text-decoration: none;
     color: var(--dark);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .navegacao-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .navegacao-card h3 {
     margin-bottom: 0.5rem;
+    color: var(--primary);
+}
+
+.navegacao-card p {
+    font-size: 0.95rem;
+    color: var(--gray);
+}
+
+.card-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: var(--secondary);
 }
 
 /* Seção de Contratações Temporárias */
 .contratacoes-temporarias {
     background: #BFDBFE;
-    padding: 2rem 0;
+    padding: 2.5rem 0;
 }
 
 .contratacoes-temporarias h2 {
-    margin-bottom: 1rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
 }
 
 .contratacoes-temporarias ul {
-    list-style: disc;
+    list-style: disc inside;
     padding-left: 1.5rem;
+    max-width: 800px;
+    margin: 0 auto 1.5rem;
 }
 
 .contratacoes-temporarias li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.contratacoes-temporarias a {
+    color: var(--secondary);
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.contratacoes-temporarias a:hover {
+    color: #059669;
 }
 
 /* Rodapé */
@@ -110,50 +193,4 @@
 
 .footer-links a:hover {
     text-decoration: underline;
-}
-
-/* NAVBAR */
-.navbar {
-    background-color: #0a74da;
-    padding: 12px 0;
-    position: sticky;
-    top: 0;
-    width: 100%;
-    z-index: 999;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.navbar-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.navbar-logo a {
-    font-size: 22px;
-    font-weight: bold;
-    color: white;
-    text-decoration: none;
-}
-
-.navbar-links {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-    margin: 0;
-    padding: 0;
-}
-
-.navbar-links li a {
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    transition: color 0.2s;
-}
-
-.navbar-links li a:hover {
-    color: #d1e9ff;
 }

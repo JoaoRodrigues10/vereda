@@ -2,42 +2,162 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Cadastrar Vaga</title>
-    <link rel="stylesheet" href="/css/vaga.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Vereda - Cadastrar Nova Vaga</title>
+    <link rel="stylesheet" href="/css/vaga.css"> <!-- Estilo atualizado -->
 </head>
 <body>
-<div class="container">
-    <h1>Cadastrar Nova Vaga</h1>
 
-    <form id="vaga-form">
-        <label for="titulo">Título:</label>
-        <input type="text" id="titulo" name="titulo" required />
+<!-- Botão Voltar com estilo embutido -->
+<div class="container" style="margin-top: 2rem; max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem;">
+    <button
+            onclick="window.history.back()"
+            style="
+            background-color: #3B82F6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease;"
+            onmouseover="this.style.backgroundColor='#2563eb'; this.style.transform='translateY(-2px)'"
+            onmouseout="this.style.backgroundColor='#3B82F6'; this.style.transform='none'"
+    >
+        ← Voltar
+    </button>
+</div>
 
-        <label for="descricao">Descrição:</label>
-        <textarea id="descricao" name="descricao" rows="4" required></textarea>
 
-        <label for="local">Local:</label>
-        <input type="text" id="local" name="local" required />
+<!-- Container do Formulário -->
+<div class="container-form">
+    <div class="form-header">
+        <h1>Cadastrar Nova Vaga</h1>
+        <p class="form-subtitle">Conecte-se a trabalhadores com apoio de ONGs parceiras.</p>
+    </div>
 
-        <input type="hidden" id="empresaId" name="empresaId" />
-        <input type="hidden" id="ativa" name="ativa" value="true" />
+    <!-- Formulário -->
+    <form id="vaga-form" class="vaga-form">
+        <!-- ID da Empresa (somente leitura) -->
+        <div class="form-group">
+            <!-- Campo oculto para envio ao backend -->
+            <input type="hidden" id="empresaId" name="empresaId" th:value="${empresa.idEmpresa}" />
+        </div>
 
-        <button type="submit">Cadastrar</button>
-        <p id="mensagem"></p>
+        <!-- Título da Vaga -->
+        <div class="form-group">
+            <label for="titulo">Título da Vaga</label>
+            <input type="text" id="titulo" name="titulo" required
+                   placeholder="Ex: Ajudante de Pedreiro" />
+            <div class="error-message" id="tituloError">Título é obrigatório.</div>
+        </div>
+
+        <!-- Descrição -->
+        <div class="form-group">
+            <label for="descricao">Descrição do Serviço</label>
+            <textarea id="descricao" name="descricao" rows="5" required
+                      placeholder="Descreva as atividades, requisitos e expectativas do serviço"></textarea>
+            <div class="error-message" id="descricaoError">Descrição é obrigatória.</div>
+        </div>
+
+        <!-- Localização -->
+        <div class="form-group">
+            <label for="local">Local da Vaga</label>
+            <input type="text" id="local" name="local" required
+                   placeholder="Ex: São Paulo" />
+            <div class="error-message" id="localError">Localização é obrigatória.</div>
+        </div>
+
+
+
+        <!-- Botão de Envio -->
+        <button type="submit" class="btn-submit">Cadastrar Vaga</button>
+        <p id="mensagem" class="mensagem-status"></p>
     </form>
 </div>
 
+<!-- Rodapé -->
+<footer class="footer">
+    <div class="container-footer">
+        <p>&copy; 2025 Vereda. Todos os direitos reservados.</p>
+        <div class="footer-links">
+            <a href="/empresa/perfil">Perfil</a>
+            <a href="/empresa/ajuda">Central de Ajuda</a>
+            <a href="/logout">Sair</a>
+        </div>
+    </div>
+</footer>
+
+<!-- Script de Validação -->
 <script>
-    // Preenche automaticamente o campo empresaId com o valor do localStorage
+    // Preenche automaticamente o ID da empresa
     const empresaId = localStorage.getItem('empresaId');
     if (empresaId) {
         document.getElementById('empresaId').value = empresaId;
-        document.getElementById('empresaIdPreview').textContent = empresaId;
+        document.getElementById('empresaIdPreview').value = empresaId;
     } else {
-        document.getElementById('empresaIdPreview').textContent = 'Não encontrado no localStorage';
+        document.getElementById('empresaIdPreview').value = 'Não autenticado';
+        document.getElementById('mensagem').textContent = 'Você precisa estar logado para cadastrar vagas.';
+        document.getElementById('mensagem').style.color = '#EF4444';
     }
+
+    // Validação do formulário
+    document.getElementById('vaga-form').addEventListener('submit', function (e) {
+        const titulo = document.getElementById('titulo').value.trim();
+        const descricao = document.getElementById('descricao').value.trim();
+        const local = document.getElementById('local').value.trim();
+        const ativa = document.getElementById('ativa').value;
+
+        let valido = true;
+
+        if (!titulo) {
+            document.getElementById('tituloError').style.display = 'block';
+            document.getElementById('titulo').style.borderColor = '#EF4444';
+            valido = false;
+        } else {
+            document.getElementById('tituloError').style.display = 'none';
+            document.getElementById('titulo').style.borderColor = '';
+        }
+
+        if (!descricao) {
+            document.getElementById('descricaoError').style.display = 'block';
+            document.getElementById('descricao').style.borderColor = '#EF4444';
+            valido = false;
+        } else {
+            document.getElementById('descricaoError').style.display = 'none';
+            document.getElementById('descricao').style.borderColor = '';
+        }
+
+        if (!local) {
+            document.getElementById('localError').style.display = 'block';
+            document.getElementById('local').style.borderColor = '#EF4444';
+            valido = false;
+        } else {
+            document.getElementById('localError').style.display = 'none';
+            document.getElementById('local').style.borderColor = '';
+        }
+
+        if (!ativa) {
+            document.getElementById('ativaError').style.display = 'block';
+            document.getElementById('ativa').style.borderColor = '#EF4444';
+            valido = false;
+        } else {
+            document.getElementById('ativaError').style.display = 'none';
+            document.getElementById('ativa').style.borderColor = '';
+        }
+
+        if (!valido) {
+            e.preventDefault();
+            document.getElementById('mensagem').textContent = 'Corrija os campos em destaque.';
+            document.getElementById('mensagem').style.color = '#EF4444';
+        }
+    });
 </script>
 
+<!-- Script de Envio -->
 <script src="/js/vaga.js"></script>
+
 </body>
 </html>

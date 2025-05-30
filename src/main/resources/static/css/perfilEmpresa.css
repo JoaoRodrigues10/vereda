@@ -24,7 +24,7 @@ body {
 .container {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 0 1.5rem;
+    padding: 0 1rem;
 }
 
 /* Cabeçalho */
@@ -44,7 +44,6 @@ body {
 /* Formulário de Edição */
 .editar-section {
     background: white;
-    padding: 2rem 0;
 }
 
 .editar-form {
