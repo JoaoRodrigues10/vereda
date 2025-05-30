@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <title>Colaboradores Aprovados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .colaborador-card {
+            background-color: #fff;
+            border-left: 5px solid #28a745;
+            padding: 15px;
+            margin: 10px auto;
+            max-width: 800px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .colaborador-card h3 {
+            margin-top: 0;
+        }
+
+        .colaborador-card p {
+            margin: 5px 0;
+        }
+
+        .btn-finalizar {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-finalizar:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+<h1>Colaboradores Aprovados</h1>
+<div id="colaboradores-container"></div>
+
+<script>
+    const empresaId = localStorage.getItem("empresaId");
+
+    function carregarColaboradores() {
+        fetch(`http://localhost:8080/api/candidaturas/aprovadas/${empresaId}`)
+            .then(res => res.json())
+            .then(colaboradores => {
+                const container = document.getElementById("colaboradores-container");
+                container.innerHTML = "";
+
+                if (colaboradores.length === 0) {
+                    container.innerHTML = "<p>Nenhum colaborador aprovado.</p>";
+                    return;
+                }
+
+                colaboradores.forEach(c => {
+                    const card = document.createElement("div");
+                    card.className = "colaborador-card";
+                    card.innerHTML = `
+                            <h3>${c.nomeTrabalhador}</h3>
+                            <p><strong>Email:</strong> ${c.emailTrabalhador}</p>
+                            <p><strong>Telefone:</strong> ${c.telefoneTrabalhador}</p>
+                            <p><strong>Vaga:</strong> ${c.tituloVaga}</p>
+                            <p><strong>Status:</strong> ${c.status}</p>
+                            <button class="btn-finalizar" onclick="finalizarContrato(${c.idCandidatura})">
+                                Finalizar Contrato
+                            </button>
+                        `;
+                    container.appendChild(card);
+                });
+            })
+            .catch(err => alert("Erro ao carregar colaboradores: " + err.message));
+    }
+
+    function finalizarContrato(idCandidatura) {
+        fetch(`http://localhost:8080/api/candidaturas/${idCandidatura}/finalizar`, {
+            method: 'PUT'
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Erro ao finalizar contrato");
+                alert("Contrato finalizado com sucesso!");
+                carregarColaboradores();
+            })
+            .catch(err => alert("Erro ao finalizar: " + err.message));
+    }
+
+    carregarColaboradores();
+</script>
+</body>
+</html>

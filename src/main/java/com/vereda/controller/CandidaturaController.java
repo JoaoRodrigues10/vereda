@@ -1,5 +1,6 @@
 package com.vereda.controller;
 
+import com.vereda.controller.Trabalhador.CandidaturaDetalhadaDto;
 import com.vereda.model.Candidatura;
 import com.vereda.model.enums.StatusCandidatura;
 import com.vereda.service.CandidaturaService;
@@ -48,6 +49,16 @@ public class CandidaturaController {
         return candidaturaService.buscarPorVaga(idVaga);
     }
 
+    @GetMapping("/aprovadas/{empresaId}")
+    public List<CandidaturaDetalhadaDto> listarAprovadasPorEmpresa(@PathVariable Long empresaId) {
+        return candidaturaService.listarAprovadasPorEmpresa(empresaId);
+    }
+
+
+    @PutMapping("/{id}/finalizar")
+    public Candidatura finalizarContrato(@PathVariable Long id) {
+        return candidaturaService.atualizarStatus(id, StatusCandidatura.CONCLUIDA);
+    }
 
 
 }

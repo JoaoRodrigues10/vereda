@@ -1,10 +1,14 @@
 package com.vereda.service;
 
 import com.vereda.controller.CandidaturaDto;
+import com.vereda.controller.Trabalhador.CandidaturaDetalhadaDto;
+import com.vereda.dto.AvaliacaoDto;
+import com.vereda.model.Avaliacao;
 import com.vereda.model.Candidatura;
 import com.vereda.model.Trabalhador;
 import com.vereda.model.Vaga;
 import com.vereda.model.enums.StatusCandidatura;
+import com.vereda.repository.AvaliacaoRepository;
 import com.vereda.repository.CandidaturaRepository;
 import com.vereda.repository.TrabalhadorRepository;
 import com.vereda.repository.VagaRepository;
@@ -25,6 +29,10 @@ public class CandidaturaService {
 
     @Autowired
     private VagaRepository vagaRepository;
+    @Autowired
+    private AvaliacaoRepository avaliacaoRepository;
+
+
 
     public Candidatura criarCandidatura(CandidaturaDto dto) {
         Trabalhador trabalhador = trabalhadorRepository.findById(dto.trabalhadorId())
@@ -64,5 +72,36 @@ public class CandidaturaService {
     public List<Candidatura> buscarPorVaga(Long idVaga) {
         return candidaturaRepository.findByVaga_IdVaga(idVaga);
     }
+
+
+
+    public Avaliacao criarAvaliacao(AvaliacaoDto dto) {
+        Candidatura candidatura = candidaturaRepository.findById(dto.candidaturaId())
+                .orElseThrow(() -> new RuntimeException("Candidatura não encontrada"));
+
+        Avaliacao avaliacao = new Avaliacao();
+        avaliacao.setCandidatura(candidatura);
+        avaliacao.setComentario(dto.comentario());
+        avaliacao.setNota(dto.nota());
+
+        return avaliacaoRepository.save(avaliacao);
+    }
+
+
+
+    public List<CandidaturaDetalhadaDto> listarAprovadasPorEmpresa(Long empresaId) {
+        List<Candidatura> candidaturasAprovadas = candidaturaRepository
+                .findByVaga_Empresa_IdEmpresaAndStatus(empresaId, StatusCandidatura.ACEITA);
+
+        return candidaturasAprovadas.stream().map(c -> new CandidaturaDetalhadaDto(
+                c.getIdCandidatura(),
+                c.getTrabalhador().getNome(),
+                c.getTrabalhador().getEmail(),
+                c.getVaga().getTitulo(),
+                c.getVaga().getLocal(),
+                c.getStatus()
+        )).toList();
+    }
+
 
 }

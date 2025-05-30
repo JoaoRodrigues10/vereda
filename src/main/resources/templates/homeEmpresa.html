@@ -8,6 +8,7 @@
 </head>
 <body data-empresa-id="[[${empresa.idEmpresa}]]">
 
+
 <!-- Cabeçalho com Nome da Empresa -->
 <header class="home-header">
     <div class="container">
@@ -16,30 +17,42 @@
     </div>
 </header>
 
-<!-- Seção de Navegação Pós-Login -->
+<nav class="navbar">
+    <div class="container navbar-content">
+        <div class="navbar-logo">
+            <a href="/dashboardEmpresa"><strong>Vereda</strong></a>
+        </div>
+        <ul class="navbar-links">
+            <li><a href="/dashboardEmpresa">Dashboard</a></li>
+            <li><a href="/empresa/cadastreVagas.html">Cadastre Vagas</a></li>
+            <li><a href="/empresa/minhasVagas.html">Minhas Vagas</a></li>
+            <li><a href="/perfilEmpresa">Perfil</a></li>
+            <li><a href="/logout">Sair</a></li>
+        </ul>
+    </div>
+</nav>
+
+
+
+<!-- Navegação Pós-Login -->
 <section class="navegacao">
     <div class="container">
-        <h2 class="section-title">O que você pode fazer:</h2>
         <div class="navegacao-grid">
             <a href="/dashboardEmpresa" class="navegacao-card">
-                <div class="card-icon">📊</div>
                 <h3>Dashboard</h3>
                 <p>Resumo da sua conta e histórico de contratações</p>
             </a>
             <a href="/empresa/cadastreVagas.html" class="navegacao-card">
-                <div class="card-icon">📝</div>
-                <h3>Cadastrar Vagas</h3>
-                <p>Crie novas oportunidades de trabalho para trabalhadores vinculados a ONGs</p>
+                <h3>Cadastre Vagas</h3>
+                <p>Cadastre as suas vagas</p>
             </a>
             <a href="/perfilEmpresa" class="navegacao-card">
-                <div class="card-icon">👤</div>
                 <h3>Perfil da Empresa</h3>
                 <p>Atualize seus dados e garanta conformidade legal</p>
             </a>
             <a href="/empresa/minhasVagas.html" class="navegacao-card">
-                <div class="card-icon">💼</div>
                 <h3>Minhas Vagas</h3>
-                <p>Gerencie vagas publicadas e candidaturas</p>
+                <p>Gerencie suas vagas</p>
             </a>
         </div>
     </div>
@@ -63,7 +76,8 @@
     <div class="container">
         <p>&copy; 2025 Vereda. Todos os direitos reservados.</p>
         <div class="footer-links">
-            <a href="/perfilEmpresa">Perfil</a>
+            <a href="/empresa/perfil">Perfil</a>
+            <a href="/empresa/ajuda">Central de Ajuda</a>
             <a href="/logout">Sair</a>
         </div>
     </div>

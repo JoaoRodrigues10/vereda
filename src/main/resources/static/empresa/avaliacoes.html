@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Avaliar Colaborador</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 700px; margin: 20px auto; padding: 10px; }
+        h1 { text-align: center; }
+        .cards-container { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 20px; }
+        .card {
+            border: 1px solid #ccc; border-radius: 6px; padding: 15px; width: 300px; cursor: pointer;
+            box-shadow: 2px 2px 5px #aaa; transition: box-shadow 0.2s ease;
+        }
+        .card:hover, .card.selected {
+            box-shadow: 2px 2px 12px #0a74da;
+            border-color: #0a74da;
+        }
+        .card h3 { margin: 0 0 6px; }
+        .card p { margin: 4px 0; font-size: 0.9em; color: #555; }
+
+        form {
+            border: 1px solid #0a74da; border-radius: 6px; padding: 15px;
+            max-width: 400px; margin: 0 auto;
+        }
+        label, select, textarea, button {
+            display: block; width: 100%; margin-bottom: 12px;
+        }
+        textarea { height: 80px; resize: vertical; }
+        button {
+            background-color: #0a74da; color: white; border: none; padding: 10px;
+            font-weight: bold; cursor: pointer; border-radius: 4px;
+        }
+        button:hover { background-color: #095bb5; }
+        #message { margin-top: 10px; font-weight: bold; text-align: center; }
+    </style>
+</head>
+<body>
+
+<h1>Avaliar Colaboradores Finalizados</h1>
+
+<div class="cards-container" id="cardsContainer">
+    <!-- Cards vão aparecer aqui -->
+</div>
+
+<form id="avaliacaoForm" style="display:none;">
+    <h2>Avaliar Candidatura</h2>
+    <input type="hidden" id="candidaturaId" />
+    <label for="nota">Nota (1 a 5):</label>
+    <select id="nota" required>
+        <option value="1">1 - Ruim</option>
+        <option value="2">2 - Regular</option>
+        <option value="3" selected>3 - Bom</option>
+        <option value="4">4 - Muito Bom</option>
+        <option value="5">5 - Excelente</option>
+    </select>
+
+    <label for="comentario">Comentário:</label>
+    <textarea id="comentario" placeholder="Comentários sobre o colaborador" required></textarea>
+
+    <button type="submit">Enviar Avaliação</button>
+    <div id="message"></div>
+</form>
+
+<script>
+    const empresaId = 1; // Mude para o ID real da empresa logada
+
+    const cardsContainer = document.getElementById('cardsContainer');
+    const form = document.getElementById('avaliacaoForm');
+    const candidaturaIdInput = document.getElementById('candidaturaId');
+    const notaInput = document.getElementById('nota');
+    const comentarioInput = document.getElementById('comentario');
+    const messageDiv = document.getElementById('message');
+
+    let selectedCard = null;
+
+    // Busca candidaturas aprovadas para a empresa
+    async function carregarCandidaturas() {
+        try {
+            const response = await fetch(`http://localhost:8080/api/candidaturas/aprovadas/${empresaId}`);
+            if (!response.ok) throw new Error('Erro ao buscar candidaturas');
+            const candidaturas = await response.json();
+
+            if (candidaturas.length === 0) {
+                cardsContainer.innerHTML = '<p>Nenhuma candidatura finalizada encontrada.</p>';
+                return;
+            }
+
+            cardsContainer.innerHTML = '';
+            candidaturas.forEach(c => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+          <h3>${c.titulo}</h3>
+          <p><strong>Trabalhador:</strong> ${c.nomeTrabalhador}</p>
+          <p><strong>Email:</strong> ${c.emailTrabalhador}</p>
+          <p><strong>Local:</strong> ${c.local}</p>
+          <p><strong>Status:</strong> ${c.status}</p>
+        `;
+
+                card.addEventListener('click', () => selecionarCard(card, c.idCandidatura));
+                cardsContainer.appendChild(card);
+            });
+        } catch (error) {
+            cardsContainer.innerHTML = `<p>Erro: ${error.message}</p>`;
+        }
+    }
+
+    // Marca o card selecionado e abre o form com a candidaturaId preenchida
+    function selecionarCard(card, candidaturaId) {
+        if (selectedCard) {
+            selectedCard.classList.remove('selected');
+        }
+        selectedCard = card;
+        selectedCard.classList.add('selected');
+
+        candidaturaIdInput.value = candidaturaId;
+        form.style.display = 'block';
+        messageDiv.textContent = '';
+        notaInput.value = '3';
+        comentarioInput.value = '';
+    }
+
+    // Envia avaliação via POST
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const payload = {
+            candidaturaId: parseInt(candidaturaIdInput.value),
+            nota: parseInt(notaInput.value),
+            comentario: comentarioInput.value.trim()
+        };
+
+        if (!payload.candidaturaId) {
+            alert('Selecione uma candidatura para avaliar.');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:8080/api/avaliacoes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || 'Erro ao enviar avaliação');
+            }
+
+            messageDiv.style.color = 'green';
+            messageDiv.textContent = 'Avaliação enviada com sucesso!';
+            notaInput.value = '3';
+            comentarioInput.value = '';
+            selectedCard.classList.remove('selected');
+            form.style.display = 'none';
+            selectedCard = null;
+
+        } catch (error) {
+            messageDiv.style.color = 'red';
+            messageDiv.textContent = 'Erro: ' + error.message;
+        }
+    });
+
+    // Carrega as candidaturas ao abrir a página
+    carregarCandidaturas();
+</script>
+
+</body>
+</html>
