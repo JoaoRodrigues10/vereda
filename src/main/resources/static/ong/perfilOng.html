@@ -1,0 +1,132 @@
+<!-- perfilOng.html -->
+<div class="perfil-container">
+    <h2>Perfil da ONG</h2>
+    <form id="perfilForm">
+        <div class="form-group">
+            <label for="nome">Nome da ONG</label>
+            <input type="text" id="nome" name="nome" required />
+        </div>
+
+        <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" required />
+        </div>
+
+        <div class="form-group">
+            <label for="telefone">Telefone</label>
+            <input type="tel" id="telefone" name="telefone" required />
+        </div>
+
+        <div class="form-group">
+            <label for="cnpj">CNPJ</label>
+            <input type="text" id="cnpj" name="cnpj" required />
+        </div>
+
+        <div class="form-group">
+            <label for="endereco">Endereço</label>
+            <input type="text" id="endereco" name="endereco" required />
+        </div>
+
+        <div class="form-group">
+            <label for="setor">Setor</label>
+            <input type="text" id="setor" name="setor" required />
+        </div>
+
+        <button type="submit" class="btn-salvar">Salvar Alterações</button>
+    </form>
+</div>
+
+<style>
+    .perfil-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: #f9f9f9;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .perfil-container h2 {
+        margin-bottom: 1.5rem;
+        text-align: center;
+        color: #10B981;
+    }
+
+    .form-group {
+        margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+        color: #333;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.6rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+
+    .btn-salvar {
+        width: 100%;
+        padding: 0.8rem;
+        background-color: #10B981;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .btn-salvar:hover {
+        background-color: #059669;
+    }
+</style>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        fetch('/api/ong/perfil')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('nome').value = data.nome;
+                document.getElementById('email').value = data.email;
+                document.getElementById('telefone').value = data.telefone;
+                document.getElementById('cnpj').value = data.cnpj;
+                document.getElementById('endereco').value = data.endereco;
+                document.getElementById('setor').value = data.setor;
+            })
+            .catch(() => {
+                alert("Erro ao carregar perfil da ONG.");
+            });
+
+        document.getElementById('perfilForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const dados = {
+                nome: document.getElementById('nome').value,
+                email: document.getElementById('email').value,
+                telefone: document.getElementById('telefone').value,
+                cnpj: document.getElementById('cnpj').value,
+                endereco: document.getElementById('endereco').value,
+                setor: document.getElementById('setor').value
+            };
+
+            fetch('/api/ong/perfil', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error('Erro ao atualizar perfil');
+                    alert('Perfil atualizado com sucesso!');
+                })
+                .catch(err => alert(err.message));
+        });
+    });
+</script>
