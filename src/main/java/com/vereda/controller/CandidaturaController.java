@@ -60,5 +60,9 @@ public class CandidaturaController {
         return candidaturaService.atualizarStatus(id, StatusCandidatura.CONCLUIDA);
     }
 
+    @GetMapping("/finalizadas/{empresaId}")
+    public List<CandidaturaDetalhadaDto> listarFinalizadasPorEmpresa(@PathVariable Long empresaId) {
+        return candidaturaService.listarFinalizadasPorEmpresa(empresaId);
+    }
 
 }

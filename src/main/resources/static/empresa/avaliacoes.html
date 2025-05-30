@@ -77,7 +77,7 @@
     // Busca candidaturas aprovadas para a empresa
     async function carregarCandidaturas() {
         try {
-            const response = await fetch(`http://localhost:8080/api/candidaturas/aprovadas/${empresaId}`);
+            const response = await fetch(`http://localhost:8080/api/candidaturas/finalizadas/${empresaId}`);
             if (!response.ok) throw new Error('Erro ao buscar candidaturas');
             const candidaturas = await response.json();
 

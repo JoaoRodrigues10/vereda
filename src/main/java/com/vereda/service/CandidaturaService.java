@@ -103,5 +103,20 @@ public class CandidaturaService {
         )).toList();
     }
 
+    public List<CandidaturaDetalhadaDto> listarFinalizadasPorEmpresa(Long empresaId) {
+        List<Candidatura> candidaturasFinalizadas = candidaturaRepository
+                .findByVaga_Empresa_IdEmpresaAndStatus(empresaId, StatusCandidatura.CONCLUIDA);
+
+        return candidaturasFinalizadas.stream().map(c -> new CandidaturaDetalhadaDto(
+                c.getIdCandidatura(),
+                c.getTrabalhador().getNome(),
+                c.getTrabalhador().getEmail(),
+                c.getVaga().getTitulo(),
+                c.getVaga().getLocal(),
+                c.getStatus()
+        )).toList();
+    }
+
+
 
 }

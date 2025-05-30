@@ -7,7 +7,7 @@ public record CandidaturaDetalhadaDto(
         Long idCandidatura,
         String nomeTrabalhador,
         String emailTrabalhador,
-        String tituloVaga,
-        String localVaga,
+        String titulo,
+        String local,
         StatusCandidatura status
 ) {}
