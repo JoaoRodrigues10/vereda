@@ -43,5 +43,11 @@ public class CandidaturaController {
         return candidaturaService.atualizarStatus(id, status);
     }
 
+    @GetMapping("/vaga/{idVaga}")
+    public List<Candidatura> listarPorVaga(@PathVariable Long idVaga) {
+        return candidaturaService.buscarPorVaga(idVaga);
+    }
+
+
 
 }

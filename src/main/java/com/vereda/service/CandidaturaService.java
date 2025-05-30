@@ -60,4 +60,9 @@ public class CandidaturaService {
         candidatura.setStatus(novoStatus);
         return candidaturaRepository.save(candidatura);
     }
+
+    public List<Candidatura> buscarPorVaga(Long idVaga) {
+        return candidaturaRepository.findByVaga_IdVaga(idVaga);
+    }
+
 }

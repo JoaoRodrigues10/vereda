@@ -150,7 +150,7 @@
 
 
                     const idOng = localStorage.getItem('ongId');
-                    carregarTrabalhadores(idOng);
+                    carregarTrabalhadores(idOng, vaga.id);
 
 
                     document.getElementById("vagaModal").style.display = "block";
@@ -164,18 +164,28 @@
                 <p style="color:red;">${error.message}</p>`;
         });
 
-    function carregarTrabalhadores(idOng) {
+    function carregarTrabalhadores(idOng, idVaga) {
         const select = document.getElementById("trabalhadorSelect");
         select.innerHTML = `<option value="">Carregando...</option>`;
 
-        fetch(`http://localhost:8080/ong/trabalhador/porOng/${idOng}`)
-            .then(res => res.json())
-            .then(trabalhadores => {
-                if (trabalhadores.length === 0) {
-                    select.innerHTML = `<option value="">Nenhum trabalhador encontrado</option>`;
+        // 1. Buscar todos os trabalhadores da ONG
+        Promise.all([
+            fetch(`http://localhost:8080/ong/trabalhador/porOng/${idOng}`).then(res => res.json()),
+            fetch(`http://localhost:8080/api/candidaturas/vaga/${idVaga}`).then(res => res.json())
+        ])
+            .then(([trabalhadores, candidaturas]) => {
+                const trabalhadoresCadastradosIds = new Set(
+                    candidaturas.map(c => c.trabalhador.idTrabalhador)
+                );
+
+                const disponiveis = trabalhadores.filter(t => !trabalhadoresCadastradosIds.has(t.idTrabalhador));
+
+                if (disponiveis.length === 0) {
+                    select.innerHTML = `<option value="">Nenhum trabalhador disponível</option>`;
                     return;
                 }
-                select.innerHTML = trabalhadores.map(t =>
+
+                select.innerHTML = disponiveis.map(t =>
                     `<option value="${t.idTrabalhador}">${t.nome}</option>`
                 ).join("");
             })
@@ -183,6 +193,7 @@
                 select.innerHTML = `<option value="">Erro ao carregar</option>`;
             });
     }
+
 
 
     document.querySelector(".close").addEventListener("click", () => {
@@ -206,11 +217,12 @@
         }
 
         const payload = {
+            trabalhadorId: parseInt(idTrabalhador),
             idVaga: parseInt(idVaga),
-            idTrabalhador: parseInt(idTrabalhador)
+            status: null // ou "PENDENTE", se quiser definir explicitamente
         };
 
-        fetch("http://localhost:8080/vagas/associar", {
+        fetch("http://localhost:8080/api/candidaturas", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -218,17 +230,18 @@
             body: JSON.stringify(payload)
         })
             .then(res => {
-                if (!res.ok) throw new Error("Erro ao associar trabalhador");
-                return res.text();
+                if (!res.ok) throw new Error("Erro ao criar candidatura");
+                return res.json();
             })
-            .then(msg => {
-                alert("Trabalhador associado com sucesso!");
+            .then(data => {
+                alert("Trabalhador associado à vaga com sucesso!");
                 document.getElementById("vagaModal").style.display = "none";
             })
             .catch(err => {
                 alert("Erro: " + err.message);
             });
     });
+
 </script>
 </body>
 </html>
