@@ -3,56 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <title>Empresas Cadastradas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #3B82F6;
+            --light: #F9FAFB;
+            --dark: #1F2937;
+            --gray: #6B7280;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #f2f2f2;
-            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background: var(--light);
+            padding: 2rem;
+        }
+
+        header {
+            background: var(--light);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
         }
 
         h1 {
-            color: #333;
+            text-align: center;
+            color: var(--primary);
+            margin-top: 2rem;
+            margin-bottom: 2rem;
         }
 
         .empresa-card {
             background-color: white;
+            border-left: 5px solid var(--primary);
             border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .empresa-card h2 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
         }
 
         .empresa-card p {
             margin: 4px 0;
+            color: var(--dark);
+        }
+
+        .empresa-card strong {
+            color: var(--gray);
         }
     </style>
 </head>
 <body>
+
+<!-- Navbar -->
+<header>
+    <nav class="navbar">
+        <div class="logo">Vereda</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/ongs">ONGs</a>
+            <a href="/empresas">Empresas</a>
+            <a href="/vagasGerais">Vagas</a>
+        </div>
+    </nav>
+</header>
 
 <h1>Empresas Cadastradas</h1>
 <div id="lista-empresas"></div>
 
 <script>
     fetch("http://localhost:8080/api/empresas")
-            .then(response => response.json())
+        .then(response => response.json())
         .then(empresas => {
             const container = document.getElementById("lista-empresas");
+            if (empresas.length === 0) {
+                container.innerHTML = "<p>Nenhuma empresa cadastrada.</p>";
+                return;
+            }
+
             empresas.forEach(emp => {
                 const div = document.createElement("div");
                 div.className = "empresa-card";
                 div.innerHTML = `
-                        <h2>${emp.nome}</h2>
-                        <p><strong>Email:</strong> ${emp.email}</p>
-                        <p><strong>Telefone:</strong> ${emp.telefone}</p>
-                        <p><strong>Endereço:</strong> ${emp.endereco}</p>
-                        <p><strong>Setor:</strong> ${emp.setor}</p>
-                        <p><strong>CNPJ:</strong> ${emp.cnpj}</p>
-                    `;
+                    <h2>${emp.nome}</h2>
+                    <p><strong>Email:</strong> ${emp.email}</p>
+                    <p><strong>Telefone:</strong> ${emp.telefone}</p>
+                    <p><strong>Endereço:</strong> ${emp.endereco}</p>
+                    <p><strong>Setor:</strong> ${emp.setor}</p>
+                    <p><strong>CNPJ:</strong> ${emp.cnpj}</p>
+                `;
                 container.appendChild(div);
             });
         })
         .catch(error => {
-            document.getElementById("lista-empresas").innerHTML = "<p>Erro ao carregar empresas.</p>";
+            document.getElementById("lista-empresas").innerHTML = "<p style='color:red;'>Erro ao carregar empresas.</p>";
             console.error(error);
         });
 </script>

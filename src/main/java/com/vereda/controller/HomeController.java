@@ -158,5 +158,10 @@ public class HomeController {
         return "redirect:/homeEmpresa";
     }
 
+    @GetMapping("/vagasGerais")
+    public String mostrarVagasGerais() {
+        return "vagasGerais";
+    }
+
 }
 

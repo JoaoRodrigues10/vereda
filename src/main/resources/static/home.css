@@ -46,10 +46,7 @@ header {
     align-items: center;
     gap: 0.5rem;
 }
-.logo::before {
-    content: "🌱";
-    font-size: 1.2rem;
-}
+
 .nav-links {
     display: flex;
     gap: 2rem;

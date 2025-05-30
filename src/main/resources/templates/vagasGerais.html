@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Vagas Disponíveis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #10B981;
+            --primary-hover: #059669;
+            --light: #F9FAFB;
+            --dark: #1F2937;
+            --gray: #6B7280;
+            --white: #FFFFFF;
+            --shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            --font: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font), sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            padding: 2rem;
+        }
+
+        header {
+            background: var(--light);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin: 2rem auto;
+            color: var(--primary);
+        }
+
+        .vaga-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .vaga-card {
+            background-color: var(--white);
+            border-left: 5px solid var(--primary);
+            padding: 1.25rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease;
+            cursor: pointer;
+        }
+
+        .vaga-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .vaga-card h2 {
+            margin: 0 0 0.5rem;
+            font-size: 1.3rem;
+            color: var(--dark);
+        }
+
+        .vaga-card p {
+            margin: 0.3rem 0;
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .status-ativa {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .status-inativa {
+            color: red;
+            font-weight: bold;
+        }
+
+        .modal {
+            position: fixed;
+            z-index: 999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .close:hover {
+            color: var(--dark);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header>
+    <nav class="navbar">
+        <div class="logo">Vereda</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/ongs">ONGs</a>
+            <a href="/empresas">Empresas</a>
+            <a href="/vagasGerais">Vagas</a>
+        </div>
+    </nav>
+</header>
+
+<h1>Vagas Disponíveis</h1>
+<div class="vaga-container" id="vaga-container"></div>
+
+<!-- Modal -->
+<div id="vagaModal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitulo"></h2>
+        <p><strong>Local:</strong> <span id="modalLocal"></span></p>
+        <p><strong>Descrição:</strong> <span id="modalDescricao"></span></p>
+    </div>
+</div>
+
+<script>
+    fetch("http://localhost:8080/vagas/disponiveis")
+        .then(response => response.json())
+        .then(vagas => {
+            const container = document.getElementById("vaga-container");
+
+            if (vagas.length === 0) {
+                container.innerHTML = "<p>Nenhuma vaga disponível no momento.</p>";
+                return;
+            }
+
+            vagas.forEach(vaga => {
+                const card = document.createElement("div");
+                card.className = "vaga-card";
+                card.innerHTML = `
+                    <h2>${vaga.titulo}</h2>
+                    <p><strong>Empresa:</strong> ${vaga.nomeEmpresa}</p>
+                    <p><strong>Local:</strong> ${vaga.local}</p>
+                    <p><strong>Status:</strong> <span class="${vaga.ativa ? 'status-ativa' : 'status-inativa'}">${vaga.ativa ? 'Ativa' : 'Desativada'}</span></p>
+                    <p><strong>Descrição:</strong> ${vaga.descricao}</p>
+                `;
+                card.addEventListener("click", () => {
+                    document.getElementById("modalTitulo").textContent = vaga.titulo;
+                    document.getElementById("modalLocal").textContent = vaga.local;
+                    document.getElementById("modalDescricao").textContent = vaga.descricao;
+                    document.getElementById("vagaModal").classList.remove("hidden");
+                });
+
+                container.appendChild(card);
+            });
+        })
+        .catch(error => {
+            document.getElementById("vaga-container").innerHTML = `<p style="color:red;">${error.message}</p>`;
+        });
+
+    document.querySelector(".close").addEventListener("click", () => {
+        document.getElementById("vagaModal").classList.add("hidden");
+    });
+
+    window.addEventListener("click", event => {
+        const modal = document.getElementById("vagaModal");
+        if (event.target === modal) {
+            modal.classList.add("hidden");
+        }
+    });
+</script>
+
+</body>
+</html>
