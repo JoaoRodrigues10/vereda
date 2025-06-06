@@ -129,6 +129,7 @@ public class CandidaturaService {
                     c.getIdCandidatura(),
                     c.getTrabalhador().getNome(),
                     c.getTrabalhador().getEmail(),
+                    c.getTrabalhador().getTelefone(), // <-- Aqui
                     c.getVaga().getTitulo(),
                     c.getVaga().getLocal(),
                     c.getStatus(),
@@ -137,6 +138,7 @@ public class CandidaturaService {
             );
         }).toList();
     }
+
 
 
 

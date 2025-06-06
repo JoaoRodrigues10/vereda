@@ -6,9 +6,12 @@ public record TrabalhadorStatusDto(
         Long idCandidatura,
         String nomeTrabalhador,
         String emailTrabalhador,
+        String telefoneTrabalhador, // <-- Adicionado aqui
         String tituloVaga,
         String local,
         StatusCandidatura status,
-        Integer nota, // pode ser null
-        String comentario // pode ser null
+        Integer nota,
+        String comentario
 ) {}
+
+

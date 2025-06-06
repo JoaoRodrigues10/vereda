@@ -133,9 +133,31 @@
 
 <h1>Avaliar Colaboradores Finalizados</h1>
 
+<div class="container" style="max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem;">
+    <button
+            onclick="window.history.back()"
+            style="
+            background-color: #3B82F6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease;"
+            onmouseover="this.style.backgroundColor='#2563eb'; this.style.transform='translateY(-2px)'"
+            onmouseout="this.style.backgroundColor='#3B82F6'; this.style.transform='none'"
+    >
+        ← Voltar
+    </button>
+</div>
 <div class="cards-container" id="cardsContainer">
     <!-- Cards vão aparecer aqui -->
 </div>
+
+
 
 <form id="avaliacaoForm" style="display:none;">
     <h2>Avaliar Candidatura</h2>
@@ -158,7 +180,7 @@
 </form>
 
 <script>
-    const empresaId = 1; // Substitua com o ID real
+    const empresaId = localStorage.getItem("empresaId");
 
     const cardsContainer = document.getElementById('cardsContainer');
     const form = document.getElementById('avaliacaoForm');
